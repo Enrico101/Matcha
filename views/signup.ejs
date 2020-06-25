@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>  
+        <title>Signup</title>
+    </head>
+    <body style="background-image: url('../index_images/red watercolour background 1412.jpg'); background-repeat: no-repeat; background-size: cover;">
+        <div class="container-fluid">
+            <header style="width: 50%;">
+                <div>
+                    <div class="font-weight-bold" style="font-size: 35px; color: white;">
+                        <p>Matcha</p>
+                    </div>
+                </div>
+            </header>
+            <div class="row">
+                <form action="/auth" name="signup" method="post" style="margin-left: 6%;">
+                    <fieldset style="border: 1px solid white; border-radius: 10px; width: 305px;">
+                        <legend style="width: auto; color: white; position: relative; top: -3px;">Signup</legend>
+                        <div class="col-sm-6" style="margin-top: 50px;">
+                            <% if (firstname == "empty") {%>
+                                <p style="color: white;">Please fill out this field</p>
+                                <% } %>
+                                <input id="firstname" class="form-control" type="text" name="firstname" placeholder="Firstname" style="width: 270px; height: 30px;" required>
+                                <br />
+                                <br /> 
+                                <% if (lastname == "empty") {%>
+                                <p style="color: white;">Please fill out this field</p>
+                                <% } %>
+                                <input id="lastname" class="form-control" type="text" name="lastname" placeholder="Lastname" style="width: 270px; height: 30px;" required>
+                                <br />
+                                <br />
+                                <% if (username == "empty") {%>
+                                <p style="color: white;">Please fill out this field</p>
+                                <% } %>
+                                <% if (username == "taken") {%>
+                                <p style="color: white;">Username is taken!</p>
+                                <% } %>
+                                <input id="username" class="form-control" type="text" name="username" placeholder="Username" style="width: 270px; height: 30px;" required>
+                                <br />
+                                <br />
+                                <% if (email == "empty") {%>
+                                <p style="color: white;">Please fill out this field</p>
+                                <% } %>
+                                <% if (email == "taken") {%>
+                                <p style="color: white;">email is taken!</p>
+                                <% } %>
+                                <input id="email" class="form-control" type="email" name="email" placeholder="Email" style="width: 270px; height: 30px;" required>
+                                <br />
+                                <br />
+                                <% if (password == "empty") {%>
+                                <p style="color: white;">Please fill out this field</p>
+                                <% } %>
+                                <% if (password == "length") {%>
+                                <p style="color: white;">Password should be greater then 6 characters!</p>
+                                <% } %>
+                                <% if (password == "format") {%>
+                                <p style="color: white;">Password does not meet the minimum requirements!</p>
+                                <% } %>
+                                <% if (password == "french_word") {%>
+                                <p style="color: white;">Password cannot be a french word</p>
+                                <% } %>
+                                <input id="password" class="form-control" type="password" name="password" placeholder="Password" style="width: 270px; height: 30px;" required>
+                                <br />
+                                <br />
+                                <input type="submit" class="btn btn-outline-light text-light btn-sm" style="width: 270px; height: 30px;  margin-bottom: 7px;" name="submit" value="submit">
+                                <p style="margin-left: 125px; color: white" class="font-weight-light">OR</p>
+                                <a  class="btn btn-outline-light text-light btn-sm" style="margin-top: -10px; margin-bottom: 44px; width: 270px; height: 30px;" href="/login">Login</a>
+                        </div>
+                    </fieldset>
+                </form>
+                <div class="col-sm-6" style="margin-top: 150px;">
+                    <p class="font-weight-light" style="color: white; ">
+                        Mature love says 'I need you because I love you.'” “Being deeply loved by someone gives you strength, while loving someone deeply gives you courage.” “One word frees us of all the weight and pain of life: That word is love.” “The deeper that sorrow carves into your being, the more joy you can contain
+                    </p>
+                </div>
+                <p id="target"></p>
+                <p id="display"></p>
+                <%
+                    if (succ == "true")
+                    {
+                %>
+                    <script>
+                        alert("An email was sent to your email in order to verify the email");
+                    </script>
+                <%
+                    }
+                %>
+            </div>
+        </div>
+        <footer>© 2020 matcha project</footer>
+    </body>
+</html>

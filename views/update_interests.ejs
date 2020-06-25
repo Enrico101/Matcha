@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <style>
+            .collapsing 
+            {
+                filter: blur(4px);
+            }
+        </style>
+        <title>Interest update</title>
+    </head>
+    <body style="background-color: #f2f2f2;">
+        <div class="container-fluid-sm" style="background-color:  #f2f2f2;">
+            <nav style="background-color:#409ad6">
+                <a class="navbar-brand" style="color: white; font-family: monospace; font-size: 25px;" href="#">Matcha</a>
+                <button  style="float: right; color: white;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav">
+                    |||
+                </button>
+                <div id="nav" class="collapse navbar-collapse">
+                    <ul  style="list-style-type: none;">
+                        <li >
+                            <a style="color: white; font-family: monospace;" href="/profile">profile</a>
+                        </li>
+                        <li >
+                            <a style="color: white; font-family: monospace;" href="/home">Home</a>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/search">Search</a>
+                        </li>
+                        <li>
+                            <%
+                                if (unread_message == "yes")
+                                {
+                            %>
+                                <a style="color: white; font-family: monospace;" href="/chat_screen">Chat (Unread message)</a>
+                            <%
+                                }
+                                else
+                                {
+                            %>
+                                <a style="color: white; font-family: monospace;" href="/chat_screen">Chat</a>
+                            <%
+                                }
+                            %>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/view_history">view_history</a>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/visit_history">visit_history</a>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/like_history">like history</a>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/profile_settings">Profile Setting</a>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/logout">logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <br />
+            <div class="shadow" style="background-color: white; width: 70%; margin: auto; border-radius: 10px; margin-top: 90px;">
+                <form style="margin-top: 20px; margin-left: 70px;" action="/profile_settings/update_interests" method="post">
+                    <br />
+                    <input type="checkbox" name="interest1" value="Reading">Reading
+                    <br />
+                    <input type="checkbox" name="interest2" value="Singing">Singing
+                    <br />
+                    <input type="checkbox" name="interest3" value="Movies">Movies
+                    <br />
+                    <input type="checkbox" name="interest4" value="Nature">Nature
+                    <br />
+                    <input type="checkbox" name="interest5" value="Running">Running
+                    <br />
+                    <input style="margin-top: 20px; background-color: dodgerblue; border-radius: 5px; color: white; border-color: dodgerblue;" type="submit" name="submit" value="Update">
+                </form>
+                <br />
+            </div>
+            <br />
+            <%
+                if (updated_interests == "yes")
+                {
+            %>
+                    <script>
+                        alert("Your interests was successfully updated!");
+                    </script>
+            <%
+                }
+                else if (empty_field == "yes")
+                {
+            %>
+                    <script>
+                        alert("The interest field is empty!");
+                    </script>
+            <%
+                }
+            %>
+        </div>
+        <footer class="fixed-bottom" style="margin-top: 500px; background-color: #409ad6; font-family: monospace; color: white; height: 45px; text-align: center;">© 2020 matcha project</footer>
+    </body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .collapsing 
+        {
+            filter: blur(4px);
+        }
+    </style>
+    <title>Change_profile_pic</title>
+</head>
+<body style="background-color: #f2f2f2;">
+    <div class="container-fluid-sm" style="background-color:  #f2f2f2;">
+        <nav style="background-color:#409ad6">
+            <a class="navbar-brand" style="color: white; font-family: monospace; font-size: 25px;" href="#">Matcha</a>
+            <button  style="float: right; color: white;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav">
+                |||
+            </button>
+            <div id="nav" class="collapse navbar-collapse">
+                <ul  style="list-style-type: none;">
+                    <li >
+                        <a style="color: white; font-family: monospace;" href="/profile">profile</a>
+                    </li>
+                    <li >
+                        <a style="color: white; font-family: monospace;" href="/home">Home</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/search">Search</a>
+                    </li>
+                    <li>
+                        <%
+                            if (unread_message == "yes")
+                            {
+                        %>
+                            <a style="color: white; font-family: monospace;" href="/chat_screen">Chat (Unread message)</a>
+                        <%
+                            }
+                            else
+                            {
+                        %>
+                            <a style="color: white; font-family: monospace;" href="/chat_screen">Chat</a>
+                        <%
+                            }
+                        %>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/view_history">view_history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/visit_history">visit_history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/like_history">like history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/profile_settings">Profile Setting</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/logout">logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <br />
+        <%
+            let x = 0;
+            if (images_edit != "")
+            {
+                while (images_edit[x])
+                {
+        %>
+                    <div class="row" style="margin-left: 20%;">
+                        <form action="/profile_settings/change_profile_pic" method="post">
+                            <img src=<%=images_edit[x].image%> width="400px" height="300px">
+                            <br />
+                            <input type="hidden" name="set_this_pic" value=<%=images_stock[x].image%>>
+                            <input  class="btn btn-info btn-block" style="position: relative; top: -30px;" type="submit" name="submit" value="set">
+
+                        </form>
+                    </div>
+        <%
+                    x++;
+                }
+            }
+        %>
+    </div>
+    <footer class="fixed-bottom" style="margin-top: 500px; background-color: #409ad6; font-family: monospace; color: white; height: 45px; text-align: center;">© 2020 matcha project</footer>
+</body>
+</html>

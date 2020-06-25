@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .collapsing 
+        {
+            filter: blur(4px);
+        }
+    </style>
+    <title>Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+</head>
+<body style="background-color: #f2f2f2;">
+    <div class="container-fluid-sm" style="background-color:  #f2f2f2">
+        <nav style="background-color:#409ad6">
+            <a class="navbar-brand" style="color: white; font-family: monospace; font-size: 25px;" href="#">Matcha</a>
+            <button  style="float: right; color: white;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav">
+                |||
+            </button>
+            <div id="nav" class="collapse navbar-collapse">
+                <ul  style="list-style-type: none;">
+                    <li >
+                        <a style="color: white; font-family: monospace;" href="/profile">profile</a>
+                    </li>
+                    <li >
+                        <a style="color: white; font-family: monospace;" href="/home">Home</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/search">Search</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/chat_screen">Chat</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/view_history">view_history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/visit_history">visit_history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/like_history">like history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/profile_settings">Profile Setting</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/logout">logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="shadow" style="width: 70%; margin: auto; margin-top: 70px; background-color: white; border-radius: 10px;">
+            <% 
+                let x = 0;
+                while (room_messages[x])
+                {
+            %>
+                    <p style="margin-left: 12px"><%=room_messages[x].username%>: <%=room_messages[x].message%></p>
+            <%
+                    x++;
+                }
+            %>
+            <p id="display"></p>
+        </div>
+        <br />
+        <br />
+        <input class="shadow" type="text" id="message" style="margin-left: 15%; margin-top: -100px; border: 0px; height: 30px; border: 1px solid #d6d6d6; border-radius: 4px;" placeholder="Type message ..."></input>
+        <button id="send" name="send" style="background-color: #008CBA; border: 0px; height: 29px; color: white; border-radius: 4px;">Send</button>
+        <button id="leave" name="leave" style="background-color: red; border: 0px; height: 29px; color: white; border-radius: 4px;">Leave</button>
+        <script>
+            var socket = io();
+            var message = document.getElementById("message");
+            var send = document.getElementById("send");
+            var leave = document.getElementById("leave");
+            var display = document.getElementById("display");
+            var id = "<%=room_id%>";
+
+            socket.emit('room', {room_id: id});
+            send.addEventListener('click', () => {
+                console.log("click!");
+                socket.emit('chat', {message: message.value, room_id: id, username: "<%=username%>"});
+                message.value = "";
+            });
+            leave.addEventListener('click', () => {
+                socket.emit('leave', {room_id: id, socket_id: socket.id});
+                location.replace('/profile');
+            });
+            socket.on('chat', (data) => {
+                display.innerHTML += '<p style="margin-left: 12px;">' + data.username + ':' + ' ' + data.message + '</p>';
+            })
+        </script>
+    </div>
+    <footer class="fixed-bottom" style="margin-top: 500px; background-color: #409ad6; font-family: monospace; color: white; height: 45px; text-align: center;">© 2020 matcha project</footer>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <style>
+            .collapsing 
+            {
+                filter: blur(4px);
+            }
+        </style>
+        <title>Profile</title>
+    </head>
+    <body>
+        <div class="container-fluid-sm">
+            <nav style="background-color: #409ad6;">
+                <a class="navbar-brand" style="color: white; font-family: monospace; font-size: 25px;" href="#">Matcha</a>
+                <button style="float: right; color: white;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav">
+                    |||
+                </button>
+                <div id="nav" class="collapse navbar-collapse">
+                    <ul  style="list-style-type: none;">
+                        <li >
+                            <a style="color: white; font-family: monospace;" href="/profile">profile</a>
+                        </li>
+                        <li >
+                            <a style="color: white; font-family: monospace;" href="/home">Home</a>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/search">Search</a>
+                        </li>
+                        <li>
+                            <%
+                                if (info == "user is ghosted")
+                                {
+                                    var unread_message = "no";
+                                }
+                                if (unread_message == "yes")
+                                {
+                            %>
+                                <a style="color: white; font-family: monospace;" href="/chat_screen">Chat (Unread message)</a>
+                            <%
+                                }
+                                else
+                                {
+                            %>
+                                <a style="color: white; font-family: monospace;" href="/chat_screen">Chat</a>
+                            <%
+                                }
+                            %>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/view_history">view_history</a>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/visit_history">visit_history</a>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/like_history">like history</a>
+                        </li>
+                        <li>
+                            <%
+                                if (info == "user is ghosted")
+                                {
+                            %>
+                                    <a style="color: white; font-family: monospace;" href="/check_profile">Extended profile</a>
+                            <%
+                                }
+                                else
+                                {
+                            %>
+                                    <a style="color: white; font-family: monospace;" href="/profile_settings">Profile Setting</a>
+                            <%
+                                }
+                            %>
+                        </li>
+                        <li>
+                            <a style="color: white; font-family: monospace;" href="/logout">logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <%
+                if (info == "user is ghosted")
+                {
+            %>
+                    <p>Welcome: <%=username%></p>
+                    <p>You are currently in ghost mode.</p>
+            <%
+                }
+                else
+                {
+            %>
+                    <p>Welcome: <%=username%></p>
+                    <p>Notification area:</p>
+                    <% if (recent_like_back != "Empty"){ %>
+                        <form action="/user_profile" method="post">
+                            <span>You macthed with <%=recent_like_back.likes%>!</span>
+                            <input type="hidden" name="username" value=<%=recent_like_back.likes%>>
+                            <input type="submit" name="submit" value="Profile">
+                        </form>
+                    <% } %>
+            <%
+                }
+            %>
+        </div>
+        <footer class="fixed-bottom" style="margin-top: 500px; background-color: #409ad6; font-family: monospace; color: white; height: 45px; text-align: center;">© 2020 matcha project</footer>
+    </body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .collapsing 
+        {
+            filter: blur(4px);
+        }
+    </style>
+    <title>User_Profile</title>
+</head>
+<body style="background-color: #f2f2f2;">
+    <div class="container-fluid-sm" style="background-color:  #f2f2f2;">
+        <nav style="background-color:#409ad6">
+            <a class="navbar-brand" style="color: white; font-family: monospace; font-size: 25px;" href="#">Matcha</a>
+            <button  style="float: right; color: white;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav">
+                |||
+            </button>
+            <div id="nav" class="collapse navbar-collapse">
+                <ul  style="list-style-type: none;">
+                    <li >
+                        <a style="color: white; font-family: monospace;" href="/profile">profile</a>
+                    </li>
+                    <li >
+                        <a style="color: white; font-family: monospace;" href="/home">Home</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/search">Search</a>
+                    </li>
+                    <li>
+                        <%
+                            if (unread_message == "yes")
+                            {
+                        %>
+                            <a style="color: white; font-family: monospace;" href="/chat_screen">Chat (Unread message)</a>
+                        <%
+                            }
+                            else
+                            {
+                        %>
+                            <a style="color: white; font-family: monospace;" href="/chat_screen">Chat</a>
+                        <%
+                            }
+                        %>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/view_history">view_history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/visit_history">visit_history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/like_history">like history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/profile_settings">Profile Setting</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/logout">logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="shadow" style="background-color: white; width: 70%; margin: auto; border-radius: 10px; margin-top: 90px;">
+            <br />
+            <form style="margin-left: 10%;" action="/like" method="post" onsubmit="like_notification()">
+                <%
+                    if (user_info.profile_pic != "Not_staged")
+                    {
+                %>
+                        <img class="shadow" src=<%=user_info.profile_pic%> width="60%" style="border-radius: 3%;"></p>
+                <%
+                    }
+                    else
+                    {
+                %>
+                        <img src="../Uploads/stock_profile_pic.png" width="400px" height="370px" style="border-radius: 50%;"></p>
+                <%
+                    }
+                %>
+                <p>Username: <%=user_info.username%></p>
+                <p>Age: <%=user_info.age%></p>
+                <p>Bio: <%=user_info.bio%></p>
+                <p>Interests: <%=user_info.user_interests%></p>
+                <p>Fame: <%=user_info.fame_rating%></p>
+                <p>I Prefer: <%=user_info.prefence%></p>
+                <p>Gender: <%=user_info.gender%></p>
+                <%
+                    if (user_info.status == "online")
+                    {
+                %>
+                        <span>Status: </span><span style="height: 10px; width: 10px; background-color: greenyellow; border-radius: 50%; display: inline-block;"></span style="  height: 10px; width: 10px; background-color: #bbb; border-radius: 50%; display: inline-block;">
+                        <br />
+                        <br />
+                <%
+                    }
+                    else
+                    {
+                %>
+                        <span>Status: </span><span style="height: 10px; width: 10px; background-color: red; border-radius: 50%; display: inline-block;"></span style="  height: 10px; width: 10px; background-color: #bbb; border-radius: 50%; display: inline-block;"><span> (last online: <%=user_info.date_of_last_connection%>)</span>
+                        <br />
+                        <br />
+                <%
+                    }
+                %>
+                <input type="hidden" name="likes" value=<%=user_info.username%>>
+                <%
+                    if (my_profile_pic != "Not_staged")
+                    {
+                        if (liked_or_not == 0)
+                        {
+                %>
+                            <input type="submit" name="submit" value="like">
+                <%
+                        }
+                        else
+                        {
+                %>
+                            <p>You already liked this user!</p>
+                <%
+                        }
+                    }
+                %>
+            </form>
+            <form style="margin-left: 10%;" action="/chat" method="post">
+                <% if (chat == "Enable") { %>
+                    <input style="margin-top: 10px; background-color: dodgerblue; border-radius: 5px; color: white; border-color: dodgerblue;" type="submit" name="submit" value="chat">
+                    <input type="hidden" name="user_liked" value=<%=user_info.username%>>
+                <% } %>
+            </form>
+            <form style="margin-left: 10%;" action="report_user" method="post">
+                <input style="margin-top: 10px; background-color: dodgerblue; border-radius: 5px; color: white; border-color: dodgerblue;" type="submit" name="submit" value="Report user as fake">
+                <input type="hidden" name="username" value=<%=user_info.username%>>
+                <br />
+                <input type="hidden" name="email" value=<%=user_email[0].email%>>
+            </form>
+            <br />
+        </div>
+        <footer class="fixed-bottom" style="margin-top: 500px; background-color: #409ad6; font-family: monospace; color: white; height: 45px; text-align: center;">© 2020 matcha project</footer>
+        <script>
+            function like_notification()
+            {
+                var socket = io();
+                var my_username = "<%=my_username%>";
+                socket.emit('like_notification', {my_username: my_username});
+            }
+        </script>
+    </div>
+</body>
+</html>

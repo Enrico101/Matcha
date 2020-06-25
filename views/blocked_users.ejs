@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Blocked_users</title>
+</head>
+<body>
+    <header>Matcha!</header>
+    <nav>
+        <a href="block_requests">block requests</a>
+    </nav>
+    <div>
+        <%
+            if (blocked_users)
+            {
+                var x = 0;
+                while (blocked_users[x])
+                {
+        %>
+                    <form action="/block_requests" method="post">
+                        <p><%=blocked_users[x].blocker%> Requested to block <%=blocked_users[x].blocked_user%></p>
+                        <input type="hidden" name="blocked_user" value=<%=blocked_users[x].blocked_user%>
+                        <br />
+                        <input type="hidden" name="blocker" value=<%=blocked_users[x].blocker%>
+                        <br />
+                        <input type="submit" name="submit" value="block">
+                        <input type="submit" name="submit" value="reject">
+                    </form>
+        <%
+                    x++;
+                }
+            }
+        %>
+        <footer class="fixed-bottom" style="margin-top: 500px; background-color: #409ad6; font-family: monospace; color: white; height: 45px; text-align: center;">© 2020 matcha project</footer>
+    </div>
+</body>
+</html>

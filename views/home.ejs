@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        .collapsing 
+        {
+            filter: blur(4px);
+        }
+    </style>
+    <title>Home</title>
+</head>
+<body>
+    <div class="container-fluid-sm" style="background-color:  #f2f2f2;">
+        <nav style="background-color:#409ad6">
+            <a class="navbar-brand" style="color: white; font-family: monospace; font-size: 25px;" href="#">Matcha</a>
+            <button  style="float: right; color: white;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav">
+                |||
+            </button>
+            <div id="nav" class="collapse navbar-collapse">
+                <ul  style="list-style-type: none;">
+                    <li >
+                        <a style="color: white; font-family: monospace;" href="/profile">profile</a>
+                    </li>
+                    <li >
+                        <a style="color: white; font-family: monospace;" href="/home">Home</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/search">Search</a>
+                    </li>
+                    <li>
+                        <%
+                            if (info == "user is ghosted")
+                            {
+                                var unread_message = "no";
+                            }
+                            if (unread_message == "yes")
+                            {
+                        %>
+                            <a style="color: white; font-family: monospace;" href="/chat_screen">Chat (Unread message)</a>
+                        <%
+                            }
+                            else
+                            {
+                        %>
+                            <a style="color: white; font-family: monospace;" href="/chat_screen">Chat</a>
+                        <%
+                            }
+                        %>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/view_history">view_history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/visit_history">visit_history</a>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/like_history">like history</a>
+                    </li>
+                    <li>
+                        <%
+                            if (info == "user is ghosted")
+                            {
+                        %>
+                                <a style="color: white; font-family: monospace;" href="/check_profile">Extended profile</a>
+                        <%
+                            }
+                            else
+                            {
+                        %>
+                                <a style="color: white; font-family: monospace;" href="/profile_settings">Profile Setting</a>
+                        <%
+                            }
+                        %>
+                    </li>
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/logout">logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <%
+            if (info == "user is ghosted") 
+            {
+        %>
+                <p>This feature is not availble for you. In order to enable this feature, you need to complete your extended profile.</p>
+        <%
+            }
+            else
+            {
+        %>
+                <div class="row" style="margin-top: 15px; margin-left: 15px; margin-right: 15px;">
+                    <div class="col-sm-3" style="background-color: white; border: 1px solid #d9d9d9; margin-bottom: 15px;">
+                        <div style="margin-left: 20%; margin-right: 20%;">
+                            <form action="/home/sort" method="get">
+                                <p>Sort by:</p>
+                                <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#age_sort">age</button>
+                                <br />
+                                <div style="margin-left: 30%; margin-right: 20%;" id="age_sort"class="collapse">
+                                    <input type="radio" name="age_sort" value="asc">asc
+                                    <input type="radio" name="age_sort" value="desc">desc
+                                </div>
+                                <br />
+                                <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#location_sort">Location</button>
+                                <br />
+                                <div style="margin-left: 30%; margin-right: 20%;" id="location_sort" class="collapse">
+                                    <input type="radio" name="location_sort" value="asc">asc
+                                    <input type="radio" name="location_sort" value="desc">desc
+                                </div>
+                                <br />
+                                <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#fame_sort">Fame</button>
+                                <br />
+                                <div style="margin-left: 30%; margin-right: 20%;" id="fame_sort" class="collapse">
+                                    <input type="radio" name="fame_sort" value="asc">asc
+                                    <input type="radio" name="fame_sort" value="desc">desc
+                                </div>
+                                <br />
+                                <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#tag_sort">Common tags</button>
+                                <br />
+                                <div style="margin-left: 30%; margin-right: 20%;" id="tag_sort" class="collapse">
+                                    <input type="radio" name="tags_sort" value="asc">asc
+                                    <input type="radio" name="tags_sort" value="desc">desc
+                                </div>
+                                <br />
+                                <input class="btn btn-danger btn-block" type="submit" name="submit" value="sort">
+                                <input class="btn btn-danger btn-block" type="submit" name="submit" value="Reset">
+                            </form>
+                        </div>
+                        <br />
+                        <div  style="margin-left: 20%; margin-right: 20%;">
+                            <form action="/home/filter" method="get">
+                                <p>Filter by:</p>
+                                <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#age_fil">age</button>
+                                <br />
+                                <div style="margin-left: 2%; margin-right: 20%;" id="age_fil" class="collapse">
+                                    <input type="text" name="age_filter">
+                                </div>
+                                <br />
+                                <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#location_fil">location</button>
+                                <br />
+                                <div style="margin-left: 2%; margin-right: 20%;" id="location_fil" class="collapse">
+                                    <input type="number" min="0" name="location_filter">
+                                </div>
+                                <br />
+                                <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#fame_fil">fame</button>
+                                <br />
+                                <div style="margin-left: 2%; margin-right: 20%;" id="fame_fil" class="collapse">
+                                    <input type="text" name="fame_filter">
+                                </div>
+                                <br />
+                                <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#interest_fil">Interest</button>
+                                <br />
+                                <div style="margin-left: 30%; margin-right: 20%;" id="interest_fil" class="collapse">
+                                    <input type="checkbox" name="interest1" value="Reading">Reading
+                                    <br />
+                                    <input type="checkbox" name="interest2" value="Singing">Singing
+                                    <br />
+                                    <input type="checkbox" name="interest3" value="Movies">Movies
+                                    <br />
+                                    <input type="checkbox" name="interest4" value="Nature">Nature
+                                    <br />
+                                    <input type="checkbox" name="interest5" value="Running">Running
+                                    <br />
+                                </div>
+                                <br />
+                                <input class="btn btn-danger btn-block"type="submit" name="submit" value="filter">
+                                <input class="btn btn-danger btn-block"type="submit" name="submit" value="Reset">
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-sm-8" style="margin-left: auto; margin-right: auto; background-color: white; border: 1px solid #d9d9d9;">
+                        <p>Users: </p>
+                        <% var x = 0;
+                        while (valid_users[x])
+                        {%>
+                        <% if (valid_users[x] != "not_requested")
+                        {%>
+                        <div class="shadow" style="margin-left: auto; margin-right: auto; border: 1px solid #f2f2f2; width: 260px; border-radius: 15px;">
+                            <form action="/user_profile" method="post">
+                                <%
+                                    if (valid_users[x].profile_pic != "Not_staged")
+                                    {
+                                %>
+                                        <% if (valid_users[x].profile_pic[0] == 'U') { %>
+                                        <img src=<%="http://localhost:3002/"+valid_users[x].profile_pic%> width="250px" height="245px" style="border-radius: 50%; margin-left: 5px;">
+                                        <% } else { %>
+                                            <img src=<%=valid_users[x].profile_pic%> width="250px" height="245px" style="border-radius: 50%; margin-left: 5px;">
+                                        <%
+                                            }
+                                        %>
+                                <%
+                                    }
+                                    else
+                                    {
+                                %>
+                                        <img src="../Uploads/stock_profile_pic.png" width="140px" height="135px" style="border-radius: 50%; margin-left: 5px;">
+                                <%
+                                    }
+                                %>
+                                <br />
+                                <span style="font-size: 30px;">Username: <%=valid_users[x].username%></span>
+                                <br />
+                                <span style="font-size: 30px;">km's away: <%=valid_users[x].distance_from_me%></span>
+                                <input type="hidden" name="username" value=<%=valid_users[x].username%>>
+                                <br />
+                                <input class="btn btn-info" style="margin-left: 28%; margin-right: 40%;" type="submit" name="submit" value="view profile">
+                                <p></p>
+                            </form>
+                        </div>
+                        <br />
+                        <%}%>
+                        <%x++}
+                        %>
+                    </div>
+                </div>
+        <%
+            }
+        %>
+        <footer class="fixed-bottom" style="margin-top: 500px; background-color: #409ad6; font-family: monospace; color: white; height: 45px; text-align: center;">© 2020 matcha project</footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <style>
+            .collapsing 
+            {
+                filter: blur(4px);
+            }
+        </style>
+        <title>Admin</title>
+</head>
+<body>
+    <div class="container-fluid-sm">
+        <nav style="background-color: #409ad6;">
+            <a class="navbar-brand" style="color: white; font-family: monospace; font-size: 25px;" href="#">Matcha</a>
+            <button  style="float: right; color: white;" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav">
+                |||
+            </button>
+            <div id="nav" class="collapse navbar-collapse">
+                <ul  style="list-style-type: none;">
+                    <li>
+                        <a style="color: white; font-family: monospace;" href="/logout">logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <br />
+        <a class="btn btn-primary" href="block_requests">block requests</a>
+        <br />
+    </div>
+    <br />
+    <footer class="fixed-bottom" style="margin-top: 500px; background-color: #409ad6; font-family: monospace; color: white; height: 45px; text-align: center;">© 2020 matcha project</footer>
+</body>
+</html>
