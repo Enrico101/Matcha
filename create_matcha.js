@@ -4,6 +4,7 @@ var Client = require('node-rest-client').Client;
 var faker = require('faker');
 const bcrypt = require('bcrypt-nodejs');
 var rn = require('random-number');
+var names = require('human-names');
 
 var client = new Client();
 client.registerMethod("jsonMethod", "https://randomuser.me/api/?results=500", "GET");
@@ -128,9 +129,19 @@ db.query("CREATE DATABASE IF NOT EXISTS matcha;", (err, succ) => {
                                                                                           while (x < 500)
                                                                                           {
                                                                                             console.log("count: "+x);
+                                                                                            if (data.results[x].gender == "female")
+                                                                                            {
+                                                                                              var firstName = names.femaleRandom();
+                                                                                              var lastName = names.femaleRandom();
+                                                                                            }
+                                                                                            else if (data.results[x].gender == "male")
+                                                                                            {
+                                                                                              var firstName = names.maleRandom()
+                                                                                              var lastName = names.maleRandom()
+                                                                                            }
                                                                                             let userName = data.results[x].login.username;
-                                                                                            let firstName = data.results[x].name.first;
-                                                                                            let lastName = data.results[x].name.last;
+                                                                                            /*let firstName = data.results[x].name.first;
+                                                                                            let lastName = data.results[x].name.last;*/
                                                                                             let email = data.results[x].email;
                                                                                             let password = data.results[x].login.sha256;
                                                                                             let token = "Disposed";
