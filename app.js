@@ -37,7 +37,6 @@ var admin = require('./routes/admin');
 var blocked_requests = require('./routes/block_requests');
 var like_history = require('./routes/like_history');
 var profile_settings = require('./routes/profile_settings');
-var example = require('./routes/example');
 var path = require('path');
 
 var transport = nodemailer.createTransport({
@@ -86,7 +85,6 @@ app.use('/search/Uploads', express.static(path.join(__dirname, '/search/Uploads'
 app.use('/index_images', express.static(path.join(__dirname, 'index_images')));
 //localhost:3030/images/Uploads/4567890dfghjk.png
 //routes for the server
-app.use(example);
 app.use(index);
 app.use(signup);
 app.use(login);
