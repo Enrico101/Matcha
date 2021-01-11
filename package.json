@@ -26,6 +26,7 @@
     "get-date": "^1.0.2",
     "ip-locator": "0.0.1",
     "multer": "^1.4.2",
+    "mysql": "^2.18.1",
     "nodemailer": "^6.4.17",
     "socket.io": "^3.0.5",
     "uniqid": "^5.2.0",
