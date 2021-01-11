@@ -1,0 +1,34 @@
+{
+  "name": "matcha",
+  "version": "1.0.0",
+  "description": "This is the complete version of Matcha where you can find love",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Enrico101/Matcha.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Enrico101/Matcha/issues"
+  },
+  "homepage": "https://github.com/Enrico101/Matcha#readme",
+  "dependencies": {
+    "an-array-of-french-words": "^2.0.0",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "geolocation-utils": "^1.2.3",
+    "get-date": "^1.0.2",
+    "ip-locator": "0.0.1",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.4.17",
+    "socket.io": "^3.0.5",
+    "uniqid": "^5.2.0",
+    "unirest": "^0.6.0"
+  }
+}
