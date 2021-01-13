@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -18,23 +19,23 @@ router.use(bodyParser.urlencoded({
 }));
 
 router.post('/chat', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         //res.render('chat');
         console.log(req.body.user_liked);
-        db.query("SELECT room_id FROM likes WHERE username = ? AND likes = ?", [req.session.username, req.body.user_liked], (err, succ) => {
+        db.query("SELECT room_id FROM likes WHERE user_id = ? AND likes = ?", [req.session.user_id, req.body.user_liked], (err, succ) => {
             if (err)
             {
                 res.render('An error has occurred!');
             }
             else
             {
-                db.query("UPDATE messages SET read_message = ? WHERE username = ? AND room_id = ?", [0, req.body.user_liked, succ[0].room_id], (err, succ_updated) => {
+                db.query("UPDATE messages SET read_message = ? WHERE user_id = ? AND room_id = ?", [0, req.body.user_liked, succ[0].room_id], (err, succ_updated) => {
                     if (err)
                         res.send("An error has occured: "+err);
                     else
                     {
-                        db.query("SELECT * FROM messages WHERE room_id = ?", [succ[0].room_id], (err, m_results) => {
+                        db.query("select * from messages inner join users on messages.user_id = users.user_id where messages.room_id = ?;", [succ[0].room_id], (err, m_results) => {
                             console.log(m_results);
                             if (err)
                             {
@@ -42,7 +43,7 @@ router.post('/chat', (req, res) => {
                             }
                             else
                             {
-                                res.render('chat', {room_id: succ[0].room_id, username: req.session.username, room_messages: m_results});
+                                res.render('chat', {room_id: succ[0].room_id, user_id: req.session.user_id, username: req.session.username, room_messages: m_results});
                             }
                         });
                     }

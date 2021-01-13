@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
@@ -16,21 +17,25 @@ router.use(bodyParser.urlencoded({
 }));
 
 router.get('/check_profile', function(req, res) {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         var username = req.session.username;
-        db.query("SELECT * FROM ghost_mode WHERE username = ?", [username], (err, ghost_mode) => {
+        var user_id = req.session.user_id;
+
+        db.query("SELECT * FROM ghost_mode WHERE user_id = ?", [user_id], (err, ghost_mode) => {
             if (err)
                 res.send("An error occurred!");
             else if (ghost_mode.length > 0)
                 res.render('set_profile', {username: username, image: "Image found", info: "", bad_image: "", large_amount_of_uploads: ""});
             else
             {
-                db.query("SELECT * FROM user_profile WHERE username = ?", [username], function(err, results) {
+                db.query("SELECT * FROM user_profile WHERE user_id = ?", [user_id], function(err, results) {
                     console.log(results);
                     if (results.length > 0)
                     {
-                        res.redirect('/profile');
+                        db.query("UPDATE user_profile SET status = ? WHERE user_id = ?", ["online", user_id], (err, succ) => {
+                            res.redirect('/profile');
+                        })
                     }
                     else
                     {

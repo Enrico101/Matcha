@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -18,12 +19,12 @@ router.use(bodyParser.urlencoded({
 
 router.get('/', (req, res) => {
     //for when we select search via link, because it would be a get requets!
-    if (req.session.username)
+    if (req.session.user_id)
     {
         //checking for unread_messages
-        db.query("SELECT * FROM likes WHERE username = ?", [req.session.username], (err, results) => {
+        db.query("SELECT * FROM likes WHERE user_id = ?", [req.session.user_id], (err, results) => {
             db.query("SELECT * FROM messages", (err, messages) => {
-                db.query("SELECT * FROM ghost_mode WHERE username = ?", [req.session.username], (err, succ) => {
+                db.query("SELECT * FROM ghost_mode WHERE user_id = ?", [req.session.user_id], (err, succ) => {
                     if (err)
                         res.send("An error has occured!")
                     else if (succ.length > 0) 
@@ -37,7 +38,7 @@ router.get('/', (req, res) => {
                         {
                             while (messages[z])
                             {
-                                if (messages[z].username == results[y].likes && messages[z].room_id == results[y].room_id)
+                                if (messages[z].user_id == results[y].likes && messages[z].room_id == results[y].room_id)
                                 {
                                     if (messages[z].read_message == 1)
                                     {
@@ -65,20 +66,20 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
-        db.query("SELECT * FROM user_profile WHERE username != ?", [req.session.username], (err1, users) => {
+        db.query("SELECT * FROM users INNER JOIN user_profile ON users.user_id = user_profile.user_id WHERE users.user_id != ?", [req.session.user_id], (err1, users) => {
             if (err1)
             {
-                res.send("An error has occured");distance_from_
+                res.send("klfdkl;fdlkdsf;lkfsdsfd   An error has occured");
             }
             else
             {
-                db.query("SELECT * FROM likes WHERE username = ?", [req.session.username], (err, succ) => {
-                    db.query("SELECT * FROM user_profile WHERE username = ?", [req.session.username], (err2, my_info) => {
+                db.query("SELECT * FROM likes WHERE user_id = ?", [req.session.user_id], (err, succ) => {
+                    db.query("SELECT * FROM users INNER JOIN user_profile ON users.user_id = user_profile.user_id WHERE users.user_id = ?", [req.session.user_id], (err2, my_info) => {
                         if (err2)
                         {
-                            res.send("An error has occured");
+                            res.send("29298398382 An error has occured");
                         }
                         else
                         {
@@ -93,7 +94,7 @@ router.post('/', (req, res) => {
                             let interest3 = req.body.interest3;
                             let interest4 = req.body.interest4;
                             let interest5 = req.body.interest5;
-                            function Users(profile_pic, gender, age, prefence, bio, username, preferred_distance, longitude, latitude, user_interests, distance_from_me, fame_rating)
+                            function Users(profile_pic, gender, age, prefence, bio, username, preferred_distance, longitude, latitude, user_interests, distance_from_me, fame_rating, user_id)
                             {
                                 this.profile_pic = profile_pic,
                                 this.gender = gender,
@@ -103,10 +104,11 @@ router.post('/', (req, res) => {
                                 this.username = username,
                                 this.preferred_distance = preferred_distance
                                 this.longitude = longitude,
-                                this.latitude = latitude
-                                this.user_interests = user_interests;
-                                this.distance_from_me = distance_from_me;
-                                this.fame_rating = fame_rating;
+                                this.latitude = latitude,
+                                this.user_interests = user_interests,
+                                this.distance_from_me = distance_from_me,
+                                this.fame_rating = fame_rating,
+                                this.user_id = user_id
                             }
                             let y = 0;
                             while (users[y]) {
@@ -116,7 +118,7 @@ router.post('/', (req, res) => {
                                     //console.log("User: "+succ[z].likes+" "+"Status: "+succ[z].status+" username: "+users[y].username);
                                     //if ((succ[z].likes == users[y].username) && succ[z].status == "blocked")
                                     //console.log(succ[z].status == "blocked");
-                                    if (req.session.username == succ[z].username && users[y].username == succ[z].likes && succ[z].status == "blocker")
+                                    if (req.session.user_id == succ[z].user_id && users[y].user_id == succ[z].likes && succ[z].status == "blocker")
                                     {
                                         users[y] = "Dont";
                                     }
@@ -228,7 +230,7 @@ router.post('/', (req, res) => {
                             {
                                 if (users[e] != "Dont")
                                 {
-                                    users_sort[f] = new Users(users[e].profile_pic, users[e].gender, users[e].age, users[e].prefence, users[e].bio, users[e].username, users[e].preferred_distance, users[e].longitude, users[e].latitude, users[e].user_interests, users[e].distance_from_me, users[e].fame_rating);
+                                    users_sort[f] = new Users(users[e].profile_pic, users[e].gender, users[e].age, users[e].prefence, users[e].bio, users[e].username, users[e].preferred_distance, users[e].longitude, users[e].latitude, users[e].user_interests, users[e].distance_from_me, users[e].fame_rating, users[e].user_id);
                                     f++;
                                 }
                                 e++;
@@ -243,7 +245,7 @@ router.post('/', (req, res) => {
                                 i++;
                             }
                              //This is for the user who is already ghosted, he can only view people.
-                             db.query("SELECT * FROM ghost_mode WHERE username = ?", [req.session.username], (err, succ) => {
+                             db.query("SELECT * FROM ghost_mode WHERE user_id = ?", [req.session.user_id], (err, succ) => {
                                 if (err)
                                     res.send("An error has occured!");
                                 else if (succ.length > 0)
@@ -270,9 +272,9 @@ router.post('/', (req, res) => {
 });
 
 router.post('/sort_results', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
-        db.query("SELECT * FROM user_profile WHERE username = ?", [req.session.username], (err2, my_info) => {
+        db.query("SELECT * FROM users INNER JOIN user_profile ON users.user_id = user_profile.user_id WHERE users.user_id = ?", [req.session.user_id], (err2, my_info) => {
             if (err2)
                 res.send("An error has occured!");
             else
@@ -414,7 +416,7 @@ router.post('/sort_results', (req, res) => {
 })
 
 router.post('/filter_results', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         if (req.body.submit == "unfilter")
         {

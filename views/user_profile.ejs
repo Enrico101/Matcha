@@ -111,7 +111,7 @@
                 <%
                     }
                 %>
-                <input type="hidden" name="likes" value=<%=user_info.username%>>
+                <input type="hidden" name="likes" value=<%=user_info.user_id%>>
                 <%
                     if (my_profile_pic != "Not_staged")
                     {
@@ -138,9 +138,9 @@
             </form>
             <form style="margin-left: 10%;" action="report_user" method="post">
                 <input style="margin-top: 10px; background-color: dodgerblue; border-radius: 5px; color: white; border-color: dodgerblue;" type="submit" name="submit" value="Report user as fake">
-                <input type="hidden" name="username" value=<%=user_info.username%>>
+                <input type="hidden" name="user_id" value=<%=user_info.user_id%>>
                 <br />
-                <input type="hidden" name="email" value=<%=user_email[0].email%>>
+                <input type="hidden" name="email" value=<%=user_email%>>
             </form>
             <br />
         </div>

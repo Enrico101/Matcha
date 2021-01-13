@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');

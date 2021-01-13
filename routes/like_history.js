@@ -17,21 +17,21 @@ router.use(bodyParser.urlencoded({
 }));
 
 router.get('/like_history', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         if (req.session.search_results_modifiable)
         {
             req.session.search_results_backup = "";
             req.session.search_results_modifiable = "";
         }
-        db.query("SELECT * FROM ghost_mode WHERE username = ?", [req.session.username], (err, ghost_mode) => {
+        db.query("SELECT * FROM ghost_mode WHERE user_id = ?", [req.session.user_id], (err, ghost_mode) => {
             if (err)
                 res.send("An error has occured!");
             else if (ghost_mode.length > 0)
                 res.render('like_history', {info: "user is ghosted"});
             else
             {
-                db.query("SELECT * FROM likes WHERE likes = ?", [req.session.username], (err, likes) => {
+                db.query("select * from likes inner join users on likes.user_id = users.user_id where likes.likes = ?;", [req.session.user_id], (err, likes) => {
                     if (err)
                         res.send(err);
                     else if (likes.length > 0)

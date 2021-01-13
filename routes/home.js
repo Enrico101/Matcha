@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -26,14 +27,14 @@ router.get('/', function(req, res) {
     -Narrow the list further with common tags, move on ---X
     -I must add a feature to sort list according, age, fame rating or common tags
     -I should add a feature where a can filter according to age, localization, or common tags*/
-    if (req.session.username) 
+    if (req.session.user_id) 
     {
         if (req.session.search_results_modifiable)
         {
             req.session.search_results_backup = "";
             req.session.search_results_modifiable = "";
         }
-        db.query("SELECT * FROM ghost_mode WHERE username = ?", [req.session.username], (err, ghost_mode) => {
+        db.query("SELECT * FROM ghost_mode WHERE user_id = ?", [req.session.user_id], (err, ghost_mode) => {
             if (err)
                 res.send("An error has occured!");
             else if (ghost_mode.length > 0)
@@ -42,15 +43,15 @@ router.get('/', function(req, res) {
             }
             else
             {
-                db.query("SELECT * FROM likes WHERE username = ?", [req.session.username], (err, succ) => {
+                db.query("SELECT * FROM likes WHERE user_id = ?", [req.session.user_id], (err, succ) => {
                     db.query("SELECT * FROM messages", (err, messages) => {
-                        db.query("SELECT * FROM user_profile WHERE username != ?", [req.session.username], (err, users) => {
+                        db.query("SELECT * FROM users INNER JOIN user_profile ON users.user_id = user_profile.user_id WHERE users.user_id != ?", [req.session.user_id], (err, users) => {
                             if (err)
                                 console.log(err);
                             else if (users)
                             {
                                 //getting the maximum fame_rating number.
-                                db.query("SELECT * FROM user_profile WHERE username = ?", [req.session.username], (err, my_info) => {
+                                db.query("SELECT * FROM users INNER JOIN user_profile ON users.user_id = user_profile.user_id WHERE users.user_id = ?", [req.session.user_id], (err, my_info) => {
                                     var maximum_fame_rating = 0;
                                     var myGender = my_info[0].gender;
                                     var myPrefence = my_info[0].prefence;
@@ -58,7 +59,7 @@ router.get('/', function(req, res) {
                                     var x = 0;
                                     var y = 0;
     
-                                    function Users(profile_pic, gender, age, prefence, bio, username, preferred_distance, longitude, latitude, user_interests, fame_rating, status)
+                                    function Users(profile_pic, gender, age, prefence, bio, username, preferred_distance, longitude, latitude, user_interests, fame_rating, status, user_id)
                                     {
                                         this.profile_pic = profile_pic,
                                         this.gender = gender,
@@ -71,7 +72,8 @@ router.get('/', function(req, res) {
                                         this.latitude = latitude,
                                         this.user_interests = user_interests,
                                         this.fame_rating = fame_rating,
-                                        this.status = status
+                                        this.status = status,
+                                        this.user_id = user_id
                                     }
                                     if (myGender == "male")
                                     {
@@ -165,7 +167,7 @@ router.get('/', function(req, res) {
                                         let blocked_user_found = 0;
                                         while (succ[z])
                                         {
-                                            if ((users[x].username == succ[z].likes) && (succ[z].status == "blocked"))
+                                            if ((users[x].username == succ[z].likes) || (succ[z].status == "blocked"))
                                             {
                                                 blocked_user_found++;
                                             }
@@ -173,7 +175,7 @@ router.get('/', function(req, res) {
                                         }
                                         if (blocked_user_found > 0)
                                         {
-                                            //Do nothing
+                                            //Do nothing which means the user will be skipped
                                         }
                                         else if ((users[x].fame_rating <= maximum_fame_rating) && (users[x].fame_rating >= minimum_fame_rating))
                                         {
@@ -183,7 +185,7 @@ router.get('/', function(req, res) {
                                                 {
                                                     if (users[x].gender == "female" && users[x].prefence == "men")
                                                     {
-                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status);
+                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status, users[x].user_id);
                                                         y++;
                                                     }
                                                 }
@@ -191,7 +193,7 @@ router.get('/', function(req, res) {
                                                 {
                                                     if (users[x].gender == "female" && users[x].prefence == "women")
                                                     {
-                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age,users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status);
+                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age,users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status, users[x].user_id);
                                                         y++;
                                                     }
                                                 }
@@ -202,7 +204,7 @@ router.get('/', function(req, res) {
                                                 {
                                                     if (users[x].gender == "male" && users[x].prefence == "men")
                                                     {
-                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status);
+                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status, users[x].user_id);
                                                         y++;
                                                     }
                                                 }
@@ -210,7 +212,7 @@ router.get('/', function(req, res) {
                                                 {
                                                     if (users[x].gender == "male" && users[x].prefence == "women")
                                                     {
-                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status);
+                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status, users[x].user_id);
                                                         y++;
                                                     }
                                                 }
@@ -221,12 +223,12 @@ router.get('/', function(req, res) {
                                                 {
                                                     if (users[x].gender == 'male' && users[x].prefence == "male")
                                                     {
-                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status);
+                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status, users[x].user_id);
                                                         y++;
                                                     }
                                                     if (users[x].gender == "female" && users[x].prefence == "male")
                                                     {
-                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status);
+                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status, users[x].user_id);
                                                         y++;
                                                     }
                                                 }
@@ -234,12 +236,12 @@ router.get('/', function(req, res) {
                                                 {
                                                     if (users[x].gender == 'male' && users[x].prefence == "female")
                                                     {
-                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status);
+                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status, users[x].user_id);
                                                         y++;
                                                     }
                                                     if (users[x].gender == "female" && users[x].prefence == "female")
                                                     {
-                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status);
+                                                        valid_users[y] = new Users(users[x].profile_pic, users[x].gender, users[x].age, users[x].prefence, users[x].bio, users[x].username, users[x].preferred_distance, users[x].longitude, users[x].latitude, users[x].user_interests, users[x].fame_rating, users[x].status, users[x].user_id);
                                                         y++;
                                                     }
                                                 }
@@ -263,7 +265,7 @@ router.get('/', function(req, res) {
                                         console.log("my_preferred_distance: "+my_info[0].preferred_distance);
                                         if (kilometers <= my_info[0].preferred_distance)
                                         {
-                                            valid_users_prefence_distance[b] = new Users(valid_users[a].profile_pic, valid_users[a].gender, valid_users[a].age, valid_users[a].prefence, valid_users[a].bio, valid_users[a].username, valid_users[a].preferred_distance, valid_users[a].longitude, valid_users[a].latitude, valid_users[a].user_interests, valid_users[a].fame_rating, valid_users[a].status);
+                                            valid_users_prefence_distance[b] = new Users(valid_users[a].profile_pic, valid_users[a].gender, valid_users[a].age, valid_users[a].prefence, valid_users[a].bio, valid_users[a].username, valid_users[a].preferred_distance, valid_users[a].longitude, valid_users[a].latitude, valid_users[a].user_interests, valid_users[a].fame_rating, valid_users[a].status, valid_users[a].user_id);
                                             b++;
                                         }
                                         a++;
@@ -292,7 +294,7 @@ router.get('/', function(req, res) {
                                         }
                                         if (interest_counter >= max_interests)
                                         {
-                                            valid_users_prefence_distance_tags[d] = new Users(valid_users_prefence_distance[c].profile_pic, valid_users_prefence_distance[c].gender, valid_users_prefence_distance[c].age, valid_users_prefence_distance[c].prefence, valid_users_prefence_distance[c].bio, valid_users_prefence_distance[c].username, valid_users_prefence_distance[c].preferred_distance, valid_users_prefence_distance[c].longitude, valid_users_prefence_distance[c].latitude, valid_users_prefence_distance[c].user_interests, valid_users_prefence_distance[c].fame_rating, valid_users_prefence_distance[c].status);
+                                            valid_users_prefence_distance_tags[d] = new Users(valid_users_prefence_distance[c].profile_pic, valid_users_prefence_distance[c].gender, valid_users_prefence_distance[c].age, valid_users_prefence_distance[c].prefence, valid_users_prefence_distance[c].bio, valid_users_prefence_distance[c].username, valid_users_prefence_distance[c].preferred_distance, valid_users_prefence_distance[c].longitude, valid_users_prefence_distance[c].latitude, valid_users_prefence_distance[c].user_interests, valid_users_prefence_distance[c].fame_rating, valid_users_prefence_distance[c].status, valid_users_prefence_distance[c].user_id);
                                             d++;
                                         }
                                         c++;
@@ -326,7 +328,7 @@ router.get('/', function(req, res) {
                                     {
                                         while (messages[count_2])
                                         {
-                                            if (messages[count_2].username == succ[count].likes && messages[count_2].room_id == succ[count].room_id)
+                                            if (messages[count_2].user_id == succ[count].likes && messages[count_2].room_id == succ[count].room_id)
                                             {
                                                 if (messages[count_2].read_message == 1)
                                                 {
@@ -360,7 +362,7 @@ router.get('/', function(req, res) {
 
 router.get('/sort', (req, res) => {
     //Sorting according to age
-    if (req.session.username)
+    if (req.session.user_id)
     {
         if (req.query.submit == "Reset")
         {

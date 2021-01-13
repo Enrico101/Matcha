@@ -90,20 +90,6 @@
                     <p>You are currently in ghost mode.</p>
             <%
                 }
-                else
-                {
-            %>
-                    <p>Welcome: <%=username%></p>
-                    <p>Notification area:</p>
-                    <% if (recent_like_back != "Empty"){ %>
-                        <form action="/user_profile" method="post">
-                            <span>You macthed with <%=recent_like_back.likes%>!</span>
-                            <input type="hidden" name="username" value=<%=recent_like_back.likes%>>
-                            <input type="submit" name="submit" value="Profile">
-                        </form>
-                    <% } %>
-            <%
-                }
             %>
         </div>
         <footer class="fixed-bottom" style="margin-top: 500px; background-color: #409ad6; font-family: monospace; color: white; height: 45px; text-align: center;">© 2020 matcha project</footer>

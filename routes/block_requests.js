@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -36,37 +37,37 @@ router.post('/block_requests', (req, res) => {
             let blocker = req.body.blocker;
             console.log(blocker+" "+blocked_user);
 
-            db.query("UPDATE likes SET like_back = ? WHERE username = ? AND likes = ?", [0, blocker, blocked_user], (err, succ) => {
+            db.query("UPDATE likes SET like_back = ? WHERE user_id = ? AND likes = ?", [0, blocker, blocked_user], (err, succ) => {
                 if (err)
                     res.send(err);
                 else if (succ)
                     console.log(succ);
             })
-            db.query("UPDATE likes SET room_id = ? WHERE username = ? AND likes = ?", ['not_staged', blocker, blocked_user], (err, succ) => {
+            db.query("UPDATE likes SET room_id = ? WHERE user_id = ? AND likes = ?", ['not_staged', blocker, blocked_user], (err, succ) => {
                 if (err)
                     res.send(err);
                 else if (succ)
                     console.log(succ);
             })
-            db.query("UPDATE likes SET status = ? WHERE username = ? AND likes = ?", ['blocker', blocker, blocked_user], (err, succ) => {
+            db.query("UPDATE likes SET status = ? WHERE user_id = ? AND likes = ?", ['blocker', blocker, blocked_user], (err, succ) => {
                 if (err)
                     res.send(err);
                 else if (succ)
                     console.log(succ);
             })
-            db.query("UPDATE likes SET like_back = ? WHERE username = ? AND likes = ?", [0, blocked_user, blocker], (err, succ) => {
+            db.query("UPDATE likes SET like_back = ? WHERE user_id = ? AND likes = ?", [0, blocked_user, blocker], (err, succ) => {
                 if (err)
                     res.send(err);
                 else if (succ)
                     console.log(succ);
             })
-            db.query("UPDATE likes SET room_id = ? WHERE username = ? AND likes = ?", ['not_staged', blocked_user, blocker], (err, succ) => {
+            db.query("UPDATE likes SET room_id = ? WHERE user_id = ? AND likes = ?", ['not_staged', blocked_user, blocker], (err, succ) => {
                 if (err)
                     res.send(err);
                 else if (succ)
                     console.log(succ);
             })
-            db.query("UPDATE likes SET status = ? WHERE username = ? AND likes = ?", ['blocked', blocked_user, blocker], (err, succ) => {
+            db.query("UPDATE likes SET status = ? WHERE user_id = ? AND likes = ?", ['blocked', blocked_user, blocker], (err, succ) => {
                 if (err)
                     res.send(err);
                 else if (succ)

@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -22,8 +23,8 @@ router.post('/selected_pic', (req, res) => {
     if (req.session.username)
     {
         var set = req.body.image;
-        var username = req.session.username;
-        db.query("UPDATE user_profile SET profile_pic = ? WHERE username = ?", [set, username], (err, succ) => {
+        var user_id = req.session.user_id;
+        db.query("UPDATE user_profile SET profile_pic = ? WHERE user_id = ?", [set, user_id], (err, succ) => {
             if (err)
                 res.send("An error has occured");
             else

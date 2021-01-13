@@ -82,11 +82,12 @@
             var leave = document.getElementById("leave");
             var display = document.getElementById("display");
             var id = "<%=room_id%>";
+            console.log("user_id: "+"<%=user_id%>");
 
             socket.emit('room', {room_id: id});
             send.addEventListener('click', () => {
                 console.log("click!");
-                socket.emit('chat', {message: message.value, room_id: id, username: "<%=username%>"});
+                socket.emit('chat', {message: message.value, room_id: id, user_id: "<%=user_id%>", username: "<%=username%>"});
                 message.value = "";
             });
             leave.addEventListener('click', () => {

@@ -1,8 +1,9 @@
+//checked
 const fs = require('fs');
 const db = require('./database');
 
-function postImages(username, images){
-    this.username = username,
+function postImages(user_id, images){
+    this.user_id = user_id,
     this.images = images,
     this.bad_image = 1;
 
@@ -38,7 +39,7 @@ function postImages(username, images){
                     console.log(err);
                 }
             });
-            db.query("INSERT INTO images (username, image) VALUES (?, ?)", [this.username, img], function(err) {
+            db.query("INSERT INTO images (user_id, image) VALUES (?, ?)", [this.user_id, img], function(err) {
                 if (err)
                 {
                     console.log(err);

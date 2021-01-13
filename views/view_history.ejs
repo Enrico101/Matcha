@@ -101,8 +101,8 @@
             %>
                         <div class="row" style="margin: auto; margin-left: 30%; margin-right: 30%;">
                             <form action="/user_profile" method="post">
-                                <span ><%=data[x].visitor%> has viewed your profile</span>
-                                <input type="hidden" name="username" value=<%=data[x].visitor%>>
+                                <span ><%=data[x].username%> has viewed your profile</span>
+                                <input type="hidden" name="user_id" value=<%=data[x].visitor_id%>>
                                 <input class="btn btn-info btn-block" type="submit" name="submit" value="view_profile" style="margin: auto;">
                             </form>
                             <br />

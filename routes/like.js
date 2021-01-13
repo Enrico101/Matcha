@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -18,14 +19,14 @@ router.use(bodyParser.urlencoded({
 }));
 
 router.post('/like', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         if (req.body.submit)
         {
-            let username = req.session.username;
+            let user_id = req.session.user_id;
             let likes = req.body.likes;
             
-            db.query("SELECT * FROM likes WHERE username = ? AND likes = ?", [username, likes], (err, succ) => {
+            db.query("SELECT * FROM likes WHERE user_id = ? AND likes = ?", [user_id, likes], (err, succ) => {
                 if (err)
                 {
                     res.send("An error has occurred!");
@@ -40,14 +41,14 @@ router.post('/like', (req, res) => {
                     else
                     {
                         var room_id = Math.floor((Math.random() * 10000) + 1);
-                        db.query("INSERT INTO likes (username, likes, like_back, room_id, status) VALUES (?, ?, ?, ?, ?)", [username, likes, 0, "not_staged", "not_staged"], (err, succ01) => {
+                        db.query("INSERT INTO likes (user_id, likes, like_back, room_id, status) VALUES (?, ?, ?, ?, ?)", [user_id, likes, 0, "not_staged", "not_staged"], (err, succ01) => {
                             if (err)
                             {
                                 res.send(err);
                             }
                             else if (succ)
                             {
-                                db.query("SELECT * FROM user_profile WHERE username = ?", [likes], (err, info) => {
+                                db.query("SELECT * FROM user_profile WHERE user_id = ?", [likes], (err, info) => {
                                     if (err)
                                         res.send("An error has occured!");
                                     else if (info)
@@ -58,19 +59,19 @@ router.post('/like', (req, res) => {
                                             fame += 0.25;
                                         }
                                         console.log("fame: "+fame);
-                                        db.query("UPDATE user_profile SET fame_rating = ? WHERE username = ?", [fame, info[0].username], (err, succ) => {
+                                        db.query("UPDATE user_profile SET fame_rating = ? WHERE user_id = ?", [fame, info[0].user_id], (err, succ) => {
                                             if (err)
                                                 res.send("An error has occured!");
                                         })
                                     }
                                 })
-                                db.query("SELECT * FROM likes WHERE username = ? AND likes = ?", [likes, username], (err, results) => {
+                                db.query("SELECT * FROM likes WHERE user_id = ? AND likes = ?", [likes, user_id], (err, results) => {
                                     if (results.length > 0)
                                     {
-                                        db.query("UPDATE likes set like_back = ? WHERE username = ? AND likes = ?", [1, likes, username]);
-                                        db.query("UPDATE likes set room_id = ? WHERE username = ? AND likes = ?", [room_id.toString(), likes, username]);
-                                        db.query("UPDATE likes set like_back = ? WHERE username = ? AND likes = ?", [1, username, likes]);
-                                        db.query("UPDATE likes set room_id = ? WHERE username = ? AND likes = ?", [room_id.toString(), username, likes]);
+                                        db.query("UPDATE likes set like_back = ? WHERE user_id = ? AND likes = ?", [1, likes, user_id]);
+                                        db.query("UPDATE likes set room_id = ? WHERE user_id = ? AND likes = ?", [room_id.toString(), likes, user_id]);
+                                        db.query("UPDATE likes set like_back = ? WHERE user_id = ? AND likes = ?", [1, user_id, likes]);
+                                        db.query("UPDATE likes set room_id = ? WHERE user_id = ? AND likes = ?", [room_id.toString(), user_id, likes]);
                                         res.redirect('/profile');
                                     }
                                     else

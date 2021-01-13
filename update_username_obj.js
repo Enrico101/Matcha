@@ -1,9 +1,10 @@
+//checked
 var db = require('./database');
 
-function update_username(table_name, location, username, new_username) {
+function update_username(table_name, location, user_id, new_username) {
     this.table_name = table_name,
     this.location = location,
-    this.username = username,
+    this.user_id = user_id,
     this.new_username = new_username,
     this.update = function() {
         db.query("SELECT * FROM "+this.table_name+" WHERE "+this.location+" = ?", [this.username], (err, data) => {

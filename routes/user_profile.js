@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -18,92 +19,90 @@ router.use(bodyParser.urlencoded({
 }));
 
 router.post('/user_profile', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
-        db.query("SELECT * FROM likes WHERE username = ?", [req.session.username], (err, results_2) => {
+        db.query("SELECT * FROM likes WHERE user_id = ?", [req.session.user_id], (err, results_2) => {
             db.query("SELECT * FROM messages", (err, messages) => {
-                db.query("SELECT * FROM user_profile WHERE username = ?", [req.body.username], (err, user_info) => {
-                    db.query("SELECT * FROM users WHERE username = ?", [req.body.username], (err, user_email) => {
-                        db.query("SELECT * FROM user_profile WHERE username = ?", [req.session.username], (err, my_info) => {
-                            db.query("SELECT * FROM likes WHERE username = ? AND likes = ?", [req.session.username, req.body.username], (err, liked_or_not) => {
-                                if (err)
-                                    res.send("An error has occured!");
-                                else
+                db.query("SELECT * FROM users INNER JOIN user_profile ON users.user_id = user_profile.user_id WHERE users.user_id = ?", [req.body.user_id], (err, user_info) => {
+                    db.query("SELECT * FROM users INNER JOIN user_profile ON users.user_id = user_profile.user_id WHERE users.user_id = ?", [req.session.user_id], (err, my_info) => {
+                        db.query("SELECT * FROM likes WHERE user_id = ? AND likes = ?", [req.session.user_id, req.body.user_id], (err, liked_or_not) => {
+                            if (err)
+                                res.send("An error has occured!");
+                            else
+                            {
+                                let like_or_nah = 0;
+                                if (liked_or_not.length > 0)
                                 {
-                                    let like_or_nah = 0;
-                                    if (liked_or_not.length > 0)
-                                    {
-                                        like_or_nah = 1;
-                                    }
-                                    if (user_info.length > 0)
-                                    {
-                                        //storing data of who viewed my profile
-                                        db.query("SELECT * FROM views WHERE username = ? AND visitor = ?", [user_info[0].username, req.session.username], (err, succ) => {
-                                            if (err)
-                                                console.log("An error has occured!");
-                                            else if (succ.length > 0)
+                                    like_or_nah = 1;
+                                }
+                                if (user_info.length > 0)
+                                {
+                                    //storing data of who viewed my profile
+                                    db.query("SELECT * FROM views WHERE user_id = ? AND visitor_id = ?", [user_info[0].user_id, req.session.user_id], (err, succ) => {
+                                        if (err)
+                                            console.log("An error has occured!");
+                                        else if (succ.length > 0)
+                                        {
+                                            console.log("Info already exists!");
+                                        }
+                                        else
+                                            db.query("INSERT INTO views (user_id, visitor_id) VALUES (?, ?)", [user_info[0].user_id, req.session.user_id], (err, results) => {
+                                                if (err)
+                                                    res.send("An error has occured!");
+                                            });
+                                    })
+                                    //This if for rendering the user profile and to indicate whether we shoul enable to users to chat or not
+                                    db.query("SELECT like_back FROM likes WHERE user_id = ? AND likes = ?", [req.session.user_id, req.body.user_id], (err, results) => {
+                                        if (err)
+                                            res.send("An error has occured!");
+                                        else
+                                        {
+                                            if (results.length > 0)
                                             {
-                                                console.log("Info alrready exists!");
-                                            }
-                                            else
-                                                db.query("INSERT INTO views (username, visitor) VALUES (?, ?)", [user_info[0].username, req.session.username], (err, results) => {
-                                                    if (err)
-                                                        res.send("An error has occured!");
-                                                });
-                                        })
-                                        //This if for rendering the user profile and to indicate whether we shoul enable to users to chat or not
-                                        db.query("SELECT like_back FROM likes WHERE username = ? AND likes = ?", [req.session.username, req.body.username], (err, results) => {
-                                            if (err)
-                                                res.send("An error has occured!");
-                                            else
-                                            {
-                                                if (results.length > 0)
+                                                if (results[0].like_back == 1)
                                                 {
-                                                    if (results[0].like_back == 1)
-                                                    {
-                                                        let y = 0;
-                                                        let z = 0;
-                                                        let unread_message = "no";
+                                                    let y = 0;
+                                                    let z = 0;
+                                                    let unread_message = "no";
 
-                                                        while (results_2[y])
-                                                        {
-                                                            while (messages[z])
-                                                            {
-                                                                if (messages[z].username == results_2[y].likes && messages[z].room_id == results_2[y].room_id)
-                                                                {
-                                                                    if (messages[z].read_message == 1)
-                                                                    {
-                                                                        unread_message = "yes";
-                                                                        break;
-                                                                    }
-                                                                }
-                                                                z++;
-                                                            }
-                                                            if (unread_message == "yes")
-                                                            {
-                                                                break;
-                                                            }
-                                                            y++;
-                                                        }
-                                                        res.render('user_profile', {user_info: user_info[0], user_email: user_email, chat: "Enable", my_username: req.session.username, my_profile_pic: my_info[0].profile_pic, liked_or_not: like_or_nah, unread_message: unread_message});
-                                                    }
-                                                    else
+                                                    while (results_2[y])
                                                     {
-                                                        res.render('user_profile', {user_info: user_info[0], user_email: user_email, chat: "Disable", my_username: req.session.username, my_profile_pic: my_info[0].profile_pic, liked_or_not: like_or_nah, unread_message: "no"});
+                                                        while (messages[z])
+                                                        {
+                                                            if (messages[z].user_id == results_2[y].likes && messages[z].room_id == results_2[y].room_id)
+                                                            {
+                                                                if (messages[z].read_message == 1)
+                                                                {
+                                                                    unread_message = "yes";
+                                                                    break;
+                                                                }
+                                                            }
+                                                            z++;
+                                                        }
+                                                        if (unread_message == "yes")
+                                                        {
+                                                            break;
+                                                        }
+                                                        y++;
                                                     }
+                                                    res.render('user_profile', {user_info: user_info[0], user_email: user_info[0].email, chat: "Enable", my_username: req.session.username, my_profile_pic: my_info[0].profile_pic, liked_or_not: like_or_nah, unread_message: unread_message});
                                                 }
                                                 else
                                                 {
-                                                    res.render('user_profile', {user_info: user_info[0], user_email: user_email, chat: "Disable", my_username: req.session.username, my_profile_pic: my_info[0].profile_pic, liked_or_not: like_or_nah, unread_message: "no"});
+                                                    res.render('user_profile', {user_info: user_info[0], user_email: user_info[0].email, chat: "Disable", my_username: req.session.username, my_profile_pic: my_info[0].profile_pic, liked_or_not: like_or_nah, unread_message: "no"});
                                                 }
                                             }
-                                        })
-                                        //res.render('user_profile', {user_info: user_info[0]});
-                                    }
+                                            else
+                                            {
+                                                res.render('user_profile', {user_info: user_info[0], user_email: user_info[0].email, chat: "Disable", my_username: req.session.username, my_profile_pic: my_info[0].profile_pic, liked_or_not: like_or_nah, unread_message: "no"});
+                                            }
+                                        }
+                                    })
+                                    //res.render('user_profile', {user_info: user_info[0]});
                                 }
-                            })
-                        })  
-                    })
+                            }
+                        })
+                    })  
                 })
             })
         })

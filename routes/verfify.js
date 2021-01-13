@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
@@ -52,12 +53,8 @@ router.post('/verify', function(req, res) {
                         if (results[0].username == req.body.username && bcrypt.compareSync(req.body.password, results[0].password))
                         {
                             req.session.username = req.body.username;
-                            db.query("UPDATE user_profile SET status = ? WHERE username = ?", ["online", req.session.username], (err, succ) => {
-                                if (err)
-                                    res.send("An error has occured!");
-                                else
-                                    res.redirect('/check_profile');
-                            })
+                            req.session.user_id = results[0].user_id;
+                            res.redirect('/check_profile');
                         }
                         else
                         {

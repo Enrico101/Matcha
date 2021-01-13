@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -19,7 +20,7 @@ router.use(bodyParser.urlencoded({
 router.post('/block', (req, res) => {
     if (req.body.submit == "block")
     {
-        db.query("INSERT INTO blocked_users (blocked_user, blocker) VALUES (?, ?)", [req.body.block_this_user, req.session.username], (err, succ) => {
+        db.query("INSERT INTO blocked_users (blocked_user, blocker) VALUES (?, ?)", [req.body.block_this_user, req.session.user_id], (err, succ) => {
             if (err)
                 console.log("An error has occured!");
             else

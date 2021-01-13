@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -18,8 +19,8 @@ router.use(bodyParser.urlencoded({
 }));
 
 router.get('/logout', (req, res) => {
-    db.query("UPDATE user_profile SET date_of_last_connection = ? WHERE username = ?", [get_date(), req.session.username]);
-    db.query("UPDATE user_profile SET status = ? WHERE username = ?", ["offline", req.session.username], (err, succ) => {
+    db.query("UPDATE user_profile SET date_of_last_connection = ? WHERE user_id = ?", [get_date(), req.session.user_id]);
+    db.query("UPDATE user_profile SET status = ? WHERE user_id = ?", ["offline", req.session.user_id], (err, succ) => {
         if (err)
             res.send("An error has occcured!");
         else

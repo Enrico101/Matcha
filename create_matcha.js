@@ -46,67 +46,67 @@ db.query("CREATE DATABASE IF NOT EXISTS matcha;", (err, succ) => {
         console.log("Selecting database: "+err);
       else
       {
-        db.query("CREATE TABLE IF NOT EXISTS ghost_mode (username VARCHAR(255) NOT NULL);", (err, succ) => {
+        db.query("CREATE TABLE IF NOT EXISTS users (user_id INT UNSIGNED NOT NULL AUTO_INCREMENT, username VARCHAR(255) NOT NULL, firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, password VARCHAR(500) NOT NULL, email VARCHAR(500) NOT NULL, token VARCHAR(500) NOT NULL, verified VARCHAR(50) NOT NULL, UNIQUE (user_id), PRIMARY KEY (user_id));", (err, succ) => {
           if (err)
               console.log(err);
           else if (succ)
           {
-              console.log("ghost_mode table created");
-              db.query("CREATE TABLE IF NOT EXISTS images (username VARCHAR(255) NOT NULL, image VARCHAR(1500) NOT NULL);", (err, succ) => {
+              console.log("users table created");
+              db.query("CREATE TABLE IF NOT EXISTS images (user_id INT UNSIGNED, image VARCHAR(1500) NOT NULL, FOREIGN KEY (user_id) REFERENCES matcha.users (user_id));", (err, succ) => {
                   if (err)
                       console.log(err);
                   else if (succ)
                   {
                       console.log("images table created");
-                      db.query("CREATE TABLE IF NOT EXISTS likes (username VARCHAR(255) NOT NULL, likes VARCHAR(255) NOT NULL, like_back INT NOT NULL, room_id VARCHAR(50) NOT NULL, status VARCHAR(50) NOT NULL);", (err, succ) => {
+                      db.query("CREATE TABLE IF NOT EXISTS likes (user_id INT UNSIGNED, likes INT UNSIGNED, like_back INT NOT NULL, room_id VARCHAR(50) NOT NULL, status VARCHAR(50) NOT NULL, FOREIGN KEY (user_id) REFERENCES matcha.users (user_id), FOREIGN KEY (likes) REFERENCES matcha.users (user_id));", (err, succ) => {
                           if (err)
                               console.log(err);
                           else if (succ)
                           {
                               console.log("likes table created");
-                              db.query("CREATE TABLE IF NOT EXISTS messages (username VARCHAR(255) NOT NULL, message VARCHAR(255) NOT NULL, room_id INT NOT NULL, read_message INT NOT NULL);", (err, succ) => {
+                              db.query("CREATE TABLE IF NOT EXISTS messages (user_id INT UNSIGNED, message VARCHAR(255) NOT NULL, room_id INT NOT NULL, read_message INT NOT NULL, FOREIGN KEY (user_id) REFERENCES matcha.users (user_id));", (err, succ) => {
                                   if (err)
                                       console.log(err);
                                   else if (succ)
                                   {
-                                      console.log("messages table created");
-                                      db.query("CREATE TABLE IF NOT EXISTS users (username VARCHAR(255) NOT NULL, firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, password VARCHAR(500) NOT NULL, email VARCHAR(500) NOT NULL, token VARCHAR(500) NOT NULL, verified VARCHAR(50) NOT NULL);", (err, succ) => {
+                                    console.log("messages table created");
+                                    db.query("CREATE TABLE IF NOT EXISTS user_profile (user_id INT UNSIGNED NOT NULL AUTO_INCREMENT, gender VARCHAR(50) NOT NULL, age INT NOT NULL, prefence VARCHAR(255) NOT NULL, bio VARCHAR(1000) NOT NULL, preferred_distance INT NOT NULL, longitude FLOAT NOT NULL, latitude FLOAT NOT NULL, user_interests VARCHAR(1000) NOT NULL, profile_pic VARCHAR(1000) NOT NULL, fame_rating FLOAT NOT NULL, status VARCHAR(255) NOT NULL DEFAULT 'offline', date_of_last_connection VARCHAR(50) NOT NULL, UNIQUE (user_id), UNIQUE (user_id), FOREIGN KEY (user_id) REFERENCES matcha.users (user_id));", (err, succ) => {
                                           if (err)
                                               console.log(err);
                                           else if (succ)
                                           {
-                                              console.log("users table created");
-                                              db.query("CREATE TABLE IF NOT EXISTS user_profile (gender VARCHAR(50) NOT NULL, age INT NOT NULL, prefence VARCHAR(255) NOT NULL, bio VARCHAR(1000) NOT NULL, username VARCHAR(255) NOT NULL, preferred_distance INT NOT NULL, longitude FLOAT NOT NULL, latitude FLOAT NOT NULL, user_interests VARCHAR(1000) NOT NULL, profile_pic VARCHAR(1000) NOT NULL, fame_rating FLOAT NOT NULL, status VARCHAR(255) NOT NULL DEFAULT 'offline', date_of_last_connection VARCHAR(50) NOT NULL);", (err, succ) => {
+                                            console.log("user_profile tabel created");
+                                            db.query("CREATE TABLE IF NOT EXISTS ghost_mode (user_id INT UNSIGNED, FOREIGN KEY (user_id) REFERENCES matcha.users (user_id));", (err, succ) => {
                                                   if (err)
                                                       console.log(err);
                                                   else if (succ)
                                                   {
-                                                      console.log("user_profile table created");
-                                                      db.query("CREATE TABLE IF NOT EXISTS blocked_users (blocked_user VARCHAR(255) NOT NULL, blocker VARCHAR(255) NOT NULL);", (err, succ) => {
+                                                      console.log("ghost_mode table created");
+                                                      db.query("CREATE TABLE IF NOT EXISTS blocked_users (blocked_user INT UNSIGNED, blocker INT UNSIGNED, FOREIGN KEY (blocked_user) REFERENCES matcha.users (user_id), FOREIGN KEY (blocker) REFERENCES matcha.users (user_id));", (err, succ) => {
                                                           if (err)
                                                               console.log(err);
                                                           else if (succ)
                                                           {
-                                                              console.log("user_profile table created");
+                                                              console.log("blocked_users table created");
                                                               db.query("CREATE TABLE IF NOT EXISTS admin (username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL);", (err, succ) => {
                                                                   if (err)
                                                                       console.log(err);
                                                                   else if (succ)
                                                                   {
-                                                                      console.log("user_profile table created");
-                                                                      db.query("CREATE TABLE IF NOT EXISTS reported (reported_user VARCHAR(255) NOT NULL, reported_by VARCHAR(255) NOT NULL);", (err, succ) => {
+                                                                      console.log("admin table created");
+                                                                      db.query("CREATE TABLE IF NOT EXISTS reported (reported_user INT UNSIGNED, reported_by INT UNSIGNED, FOREIGN KEY (reported_user) REFERENCES matcha.users (user_id), FOREIGN KEY (reported_by) REFERENCES matcha.users (user_id));", (err, succ) => {
                                                                           if (err)
                                                                               console.log(err);
                                                                           else if (succ)
                                                                           {
-                                                                              console.log("user_profile table created");
-                                                                              db.query("CREATE TABLE IF NOT EXISTS views (username VARCHAR(255) NOT NULL, visitor VARCHAR(255) NOT NULL);", (err, succ) => {
+                                                                              console.log("reported table created");
+                                                                              db.query("CREATE TABLE IF NOT EXISTS views (user_id INT UNSIGNED, visitor_id INT UNSIGNED, FOREIGN KEY (user_id) REFERENCES matcha.users (user_id), FOREIGN KEY (visitor_id) REFERENCES matcha.users (user_id));", (err, succ) => {
                                                                                   if (err)
                                                                                       console.log(err);
                                                                                   else if (succ)
                                                                                   {
-                                                                                    console.log("ghost_mode table created");
-                                                                                    db.query("CREATE TABLE IF NOT EXISTS ip_address (username VARCHAR(255) NOT NULL, ip VARCHAR(255) NOT NULL);", (err, succ) => {
+                                                                                    console.log("views table created");
+                                                                                    db.query("CREATE TABLE IF NOT EXISTS ip_address (user_id INT UNSIGNED, ip VARCHAR(255) NOT NULL, UNIQUE (user_id), FOREIGN KEY (user_id) REFERENCES matcha.users (user_id));", (err, succ) => {
                                                                                       if (err)
                                                                                         console.log(err);
                                                                                       else if (succ)
@@ -235,7 +235,7 @@ db.query("CREATE DATABASE IF NOT EXISTS matcha;", (err, succ) => {
                                                                                                 , integer: true
                                                                                                 });*/
                                                                                                 //console.log("User created!");
-                                                                                                db.query("INSERT into user_profile (gender, age, prefence, bio, username, preferred_distance, longitude, latitude, user_interests, profile_pic, fame_rating, status, date_of_last_connection) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [gender, age, prefence, bio, username, preferred_distance, longitude, latitude, user_interests, profile_pic, fame_rating, status, date_of_last_connection], (err, succ) => {
+                                                                                                db.query("INSERT into user_profile (gender, age, prefence, bio, preferred_distance, longitude, latitude, user_interests, profile_pic, fame_rating, status, date_of_last_connection) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [gender, age, prefence, bio, preferred_distance, longitude, latitude, user_interests, profile_pic, fame_rating, status, date_of_last_connection], (err, succ) => {
                                                                                                   if (err)
                                                                                                     console.log(err);
                                                                                                   else

@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -19,9 +20,9 @@ router.use(bodyParser.urlencoded({
 }));
 
 router.get('/set_profile_pic', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
-        db.query("SELECT * FROM images WHERE username = ?", [req.session.username], (err, succ) => {
+        db.query("SELECT * FROM images WHERE user_id = ?", [req.session.user_id], (err, succ) => {
             if (err)
                 res.send(err);
             else

@@ -13,7 +13,6 @@ var authenticate = require('./routes/authenticate');
 var verify = require('./routes/verfify');
 var check_profile = require('./routes/check_profile');
 var complete_profile = require('./routes/complete_profile');
-var delete_all = require('./routes/delete_all');
 var home = require('./routes/home');
 var profile = require('./routes/profile');
 var search = require('./routes/search');
@@ -92,7 +91,6 @@ app.use(authenticate);
 app.use(verify);
 app.use(check_profile);
 app.use(complete_profile);
-app.use(delete_all);
 app.use('/home', home);
 app.use(profile);
 app.use('/search', search);
@@ -136,7 +134,7 @@ io.on('connection', (socket) => {
         console.log("Socket joined room: "+data.room_id);
     })
     socket.on('chat', (data) => {
-        db.query("INSERT INTO messages (username, message, room_id, read_message) VALUES (?, ?, ?, ?)", [data.username, data.message, data.room_id, 1], (err, resulsts) => {
+        db.query("INSERT INTO messages (user_id, message, room_id, read_message) VALUES (?, ?, ?, ?)", [data.user_id, data.message, data.room_id, 1], (err, resulsts) => {
             if (err)
                 res.send("An error has occured");
             else
@@ -146,6 +144,7 @@ io.on('connection', (socket) => {
         });
     });
     socket.on('leave', (data) => {
+        console.log("user left roooooooom");
         socket.leave(data.room_id);
     })
 });

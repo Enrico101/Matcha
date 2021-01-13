@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -26,9 +27,9 @@ var transport = nodemailer.createTransport({
 })
 
 router.post("/report_user", (req, res) => {
-    if (req.body.username)
+    if (req.body.user_id && req.session.user_id)
     {
-        db.query("INSERT INTO reported (reported_user, reported_by) VALUES (?, ?)", [req.body.username, req.session.username], (err, succ) => {
+        db.query("INSERT INTO reported (reported_user, reported_by) VALUES (?, ?)", [req.body.user_id, req.session.user_id], (err, succ) => {
             if (err)
                 res.send(err);
             else

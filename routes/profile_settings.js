@@ -1,3 +1,4 @@
+//checked
 const express = require('express');
 var session = require('express-session');
 var db = require('../database');
@@ -42,9 +43,9 @@ function allLetter(inputtxt)
 }
 
 router.get('/', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
-        db.query("SELECT * FROM likes WHERE username = ?", [req.session.username], (err, results) => {
+        db.query("SELECT * FROM likes WHERE user_id = ?", [req.session.user_id], (err, results) => {
             db.query("SELECT * FROM messages", (err, messages) => {
                 if (req.session.search_results_modifiable)
                 {
@@ -59,7 +60,7 @@ router.get('/', (req, res) => {
                 {
                     while (messages[z])
                     {
-                        if (messages[z].username == results[y].likes && messages[z].room_id == results[y].room_id)
+                        if (messages[z].user_id == results[y].likes && messages[z].room_id == results[y].room_id)
                         {
                             if (messages[z].read_message == 1)
                             {
@@ -85,14 +86,14 @@ router.get('/', (req, res) => {
 })
 
 router.get('/change_profile_pic', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
-        db.query("SELECT * FROM images WHERE username = ?", [req.session.username], (err, images) => {
+        db.query("SELECT * FROM images WHERE user_id = ?", [req.session.user_id], (err, images) => {
             if (err)
                 res.send("An error has occured!");
             else if (images.length > 0)
             {
-                db.query("SELECT * FROM user_profile WHERE username = ?", [req.session.username], (err, user_info) => {
+                db.query("SELECT * FROM users INNER JOIN user_profile ON users.user_id = user_profile.user_id WHERE users.user_id = ?", [req.session.user_id], (err, user_info) => {
                     if (err)
                         res.send ("An error has occurred!");
                     else if (user_info.length > 0)
@@ -121,11 +122,11 @@ router.get('/change_profile_pic', (req, res) => {
 })
 
 router.post('/change_profile_pic', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         if (req.body.set_this_pic)
         {
-            db.query("UPDATE user_profile SET profile_pic = ? WHERE username = ?", [req.body.set_this_pic, req.session.username], (err, succ) => {
+            db.query("UPDATE user_profile SET profile_pic = ? WHERE user_id = ?", [req.body.set_this_pic, req.session.user_id], (err, succ) => {
                 if (err)
                     res.send("An error has occured!");
                 else
@@ -138,9 +139,9 @@ router.post('/change_profile_pic', (req, res) => {
 })
 
 router.get('/upload_images', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
-        db.query("SELECT * FROM images WHERE username = ?", [req.session.username], (err, images) => {
+        db.query("SELECT * FROM images WHERE user_id = ?", [req.session.user_id], (err, images) => {
             if (err)
                 res.send("An error has occurred!");
             else
@@ -160,7 +161,7 @@ router.post ('/upload_images', uploads.any(), (req, res) => {
     if (req.session.username)
     {
         console.log(req.files);
-        db.query("SELECT * FROM images WHERE username = ?", [req.session.username], (err, images) => {
+        db.query("SELECT * FROM images WHERE user_id = ?", [req.session.user_id], (err, images) => {
             let image_upload_limit = 5;
             image_upload_limit -= images.length;
     
@@ -168,7 +169,7 @@ router.post ('/upload_images', uploads.any(), (req, res) => {
                 res.send("An error has occured!");
             else if (req.files.length <= image_upload_limit)
             {
-                let post = new Objects(req.session.username, req.files);
+                let post = new Objects(req.session.user_id, req.files);
                 post.check();
                 if (post.bad_image == 0)
                 {
@@ -196,7 +197,7 @@ router.post ('/upload_images', uploads.any(), (req, res) => {
 })
 
 router.get('/update_username', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_username', {updated_username: "", unread_message: req.session.unread_message});
     }
@@ -204,38 +205,15 @@ router.get('/update_username', (req, res) => {
         res.render('login', {info: "", verified: "", login: ""});
 })
 router.post('/update_username', (req, res) => {
-    if (req.body.username && req.body.submit)
+    if (req.body.user_id && req.body.submit)
     {
         console.log("here");
-        let username = req.body.username;
+        let user_id = req.body.user_id;
 
-        if (username.length > 0)
+        if (user_id.length > 0)
         {
-            let update_username_blockedusers_blocker = new update_username_obj("blocked_users", "blocker", req.session.username, req.body.username);
-            let update_username_blockedusers_blockeduser = new update_username_obj("blocked_users", "blocked_user", req.session.username, req.body.username);
-            let update_username_images_username = new update_username_obj("images", "username", req.session.username, req.body.username);
-            let update_username_likes_username = new update_username_obj("likes", "username", req.session.username, req.body.username);
-            let update_username_likes_likes = new update_username_obj("likes", "likes", req.session.username, req.body.username);
-            let update_username_messages_username = new update_username_obj("messages", "username", req.session.username, req.body.username);
-            let update_username_reported_reported_user = new update_username_obj("reported", "reported_user", req.session.username, req.body.username);
-            let update_username_reported_reported_by = new update_username_obj("reported", "reported_by", req.session.username, req.body.username);
             let update_username_users_username = new update_username_obj("users", "username", req.session.username, req.body.username);
-            let update_username_userprofile_username = new update_username_obj("user_profile", "username", req.session.username, req.body.username);
-            let update_username_views_username = new update_username_obj("views", "username", req.session.username, req.body.username);
-            let update_username_views_visitor = new update_username_obj("views", "visitor", req.session.username, req.body.username);
-            
-            update_username_blockedusers_blocker.update();
-            update_username_blockedusers_blockeduser.update();
-            update_username_images_username.update();
-            update_username_likes_username.update();
-            update_username_likes_likes.update();
-            update_username_messages_username.update();
-            update_username_reported_reported_user.update();
-            update_username_reported_reported_by.update();
             update_username_users_username.update();
-            update_username_userprofile_username.update();
-            update_username_views_username.update();
-            update_username_views_visitor.update();
             req.session.username = req.body.username;
             res.render('update_username', {updated_username: "yes", unread_message: req.session.unread_message});
         }
@@ -251,7 +229,7 @@ router.post('/update_username', (req, res) => {
 })
 
 router.get('/update_firstname', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_firstname', {updated_firstname: "", unread_message: req.session.unread_message});
     }
@@ -265,7 +243,7 @@ router.post('/update_firstname', (req, res) => {
 
         if (firstname.length > 0)
         {
-            db.query("UPDATE users SET firstname = ? WHERE username = ?", [firstname, req.session.username], (err, succ) => {
+            db.query("UPDATE users SET firstname = ? WHERE user_id = ?", [firstname, req.session.user_id], (err, succ) => {
                 if (err)
                     res.send("An error has occured");
                 else
@@ -282,7 +260,7 @@ router.post('/update_firstname', (req, res) => {
 })
 
 router.get('/update_lastname', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_lastname', {updated_lastname: "", unread_message: req.session.unread_message});
     }
@@ -296,7 +274,7 @@ router.post('/update_lastname', (req, res) => {
 
         if (lastname.length > 0)
         {
-            db.query("UPDATE users SET lastname = ? WHERE username = ?", [lastname, req.session.username], (err, succ) => {
+            db.query("UPDATE users SET lastname = ? WHERE user_id = ?", [lastname, req.session.user_id], (err, succ) => {
                 if (err)
                     res.send("An error has occured");
                 else
@@ -313,7 +291,7 @@ router.post('/update_lastname', (req, res) => {
 })
 
 router.get('/update_password', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_password', {empty_field: "", incorrect_length: "", incorrect_format: "", updated_password: "", incorrect_old_pass: "", unread_message: req.session.unread_message});
     }
@@ -323,7 +301,7 @@ router.get('/update_password', (req, res) => {
 router.post('/update_password', (req, res) => {
     if (req.body.old_pass.length > 0)
     {
-        db.query("SELECT * FROM users WHERE username = ?", [req.session.username], (err, succ) => {
+        db.query("SELECT * FROM users WHERE user_id = ?", [req.session.user_id], (err, succ) => {
             if (err)
                 console.log(err);
             else if (succ.length > 0)
@@ -344,7 +322,7 @@ router.post('/update_password', (req, res) => {
                                 const salt = bcrypt.genSaltSync(salt_rounds);
                                 const hash = bcrypt.hashSync(password, salt);
 
-                                db.query("UPDATE users SET password = ? WHERE username = ?", [hash, req.session.username], (err, succ) => {
+                                db.query("UPDATE users SET password = ? WHERE user_id = ?", [hash, req.session.user_id], (err, succ) => {
                                     if (err)
                                         console.log(err);
                                 })
@@ -373,7 +351,7 @@ router.post('/update_password', (req, res) => {
 })
 
 router.get('/update_email', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_email', {updated_email: "", empty_field: "", unread_message: req.session.unread_message});
     }
@@ -384,7 +362,7 @@ router.post('/update_email', (req, res) => {
     let email = req.body.email;
     if (email.length > 0 && email.indexOf('@') != -1)
     {
-        db.query("UPDATE users SET email = ? WHERE username = ?", [email, req.session.username], (err, succ) => {
+        db.query("UPDATE users SET email = ? WHERE user_id = ?", [email, req.session.user_id], (err, succ) => {
             if (err)
                 console.log(err);
         })
@@ -395,7 +373,7 @@ router.post('/update_email', (req, res) => {
 })
 
 router.get('/update_prefence', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_prefence', {updated_prefence: "", unread_message: req.session.unread_message});
     }
@@ -410,7 +388,7 @@ router.post('/update_prefence', (req, res) => {
         {
             if (prefence == "men" || prefence == "women" || prefence == "other")
             {
-                db.query("UPDATE user_profile SET prefence = ? WHERE username = ?", [prefence, req.session.username], (err, succ) => {
+                db.query("UPDATE user_profile SET prefence = ? WHERE user_id = ?", [prefence, req.session.user_id], (err, succ) => {
                     if (err)
                         console.log(err);
                 })
@@ -423,7 +401,7 @@ router.post('/update_prefence', (req, res) => {
 })
 
 router.get('/update_bio', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_bio', {updated_bio: "", unread_message: req.session.unread_message})
     }
@@ -436,7 +414,7 @@ router.post('/update_bio', (req, res) => {
         let bio = req.body.bio;
         if (bio.length > 0)
         {
-            db.query("UPDATE user_profile SET bio = ? WHERE username = ?", [bio, req.session.username], (err, succ) => {
+            db.query("UPDATE user_profile SET bio = ? WHERE user_id = ?", [bio, req.session.user_id], (err, succ) => {
                 if (err)
                     console.log(err);
             })
@@ -450,7 +428,7 @@ router.post('/update_bio', (req, res) => {
 })
 
 router.get('/update_interests', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_interests', {updated_interests: "", empty_field: "", unread_message: req.session.unread_message});
     }
@@ -472,7 +450,7 @@ router.post('/update_interests', (req, res) => {
         interests += "#"+req.body.interest5;
     if (interests != "")
     {
-        db.query("UPDATE user_profile SET user_interests = ? WHERE username = ?", [interests, req.session.username], (err, succ) => {
+        db.query("UPDATE user_profile SET user_interests = ? WHERE user_id = ?", [interests, req.session.user_id], (err, succ) => {
             if (err)
                 console.log(err);
         })
@@ -483,7 +461,7 @@ router.post('/update_interests', (req, res) => {
 })
 
 router.get('/update_preferred_distance', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_preferred_distance', {updated_preferred_distance: "", empty_field: "", unread_message: req.session.unread_message});
     }
@@ -498,7 +476,7 @@ router.post('/update_preferred_distance', (req, res) => {
 
         if (preferred_distance.length > 0 && result != true)
         {
-            db.query("UPDATE user_profile SET preferred_distance = ? WHERE username = ?", [preferred_distance, req.session.username], (err, succ) => {
+            db.query("UPDATE user_profile SET preferred_distance = ? WHERE user_id = ?", [preferred_distance, req.session.user_id], (err, succ) => {
                 if (err)
                     console.log(err);
             })
@@ -511,7 +489,7 @@ router.post('/update_preferred_distance', (req, res) => {
         res.render('update_preferred_distance', {updated_preferred_distance: "", empty_field: "yes", unread_message: req.session.unread_message});
 })
 router.get('/update_age', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_age', {updated_age: "", empty_field: "", unread_message: req.session.unread_message});
     }
@@ -525,7 +503,7 @@ router.post('/update_age', (req, res) => {
         let result = allLetter(age);
         if (age.length > 0 && result != true)
         {
-            db.query("UPDATE user_profile SET age = ? WHERE username = ?", [age, req.session.username], (err, succ) => {
+            db.query("UPDATE user_profile SET age = ? WHERE user_id = ?", [age, req.session.user_id], (err, succ) => {
                 if (err)
                     console.log(err);
             })
@@ -539,7 +517,7 @@ router.post('/update_age', (req, res) => {
 })
 
 router.get('/update_location', (req, res) => {
-    if (req.session.username)
+    if (req.session.user_id)
     {
         res.render('update_location', {updated_location: "", unread_message: req.session.unread_message});
     }
@@ -560,11 +538,11 @@ router.post('/update_location', (req, res) => {
                     else
                     {
                         console.log(data);
-                        db.query("UPDATE user_profile SET longitude = ? WHERE username = ?", [data.lon, req.session.username], (err, succ) => {
+                        db.query("UPDATE user_profile SET longitude = ? WHERE user_id = ?", [data.lon, req.session.user_id], (err, succ) => {
                             if (err)
                                 console.log(err);
                         })
-                        db.query("UPDATE user_profile SET latitude = ? WHERE username = ?", [data.lat, req.session.username], (err, succ) => {
+                        db.query("UPDATE user_profile SET latitude = ? WHERE user_id = ?", [data.lat, req.session.user_id], (err, succ) => {
                             if (err)
                                 console.log(err);
                         })
@@ -576,11 +554,11 @@ router.post('/update_location', (req, res) => {
     }
     else
     {
-        db.query("UPDATE user_profile SET longitude = ? WHERE username = ?", [req.body.long, req.session.username], (err, succ) => {
+        db.query("UPDATE user_profile SET longitude = ? WHERE user_id = ?", [req.body.long, req.session.user_id], (err, succ) => {
             if (err)
                 console.log(err);
         })
-        db.query("UPDATE user_profile SET latitude = ? WHERE username = ?", [req.body.lat, req.session.username], (err, succ) => {
+        db.query("UPDATE user_profile SET latitude = ? WHERE user_id = ?", [req.body.lat, req.session.user_id], (err, succ) => {
             if (err)
                 console.log(err);
         })
