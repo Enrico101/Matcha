@@ -43,15 +43,17 @@ Matcha is a website that enables users to share there location via geolocation i
 ```bash
 .
 ├── README.md
-├── app.js
+├── app.js                                        # This is the root file that is required to run matcha.
 ├── author
-├── create_matcha.js
-├── database.js
-├── index_images                                                │   ├── 29000056.jpg
-│   └── red watercolour background 1412.jpg                     ├── objects.js
+├── create_matcha.js                              # This file is responsible for creating the databses and required folder in matcha.
+├── database.js                                   # This file contains the configurations for MySQL connection.
+├── index_images                                  # This directory contains the background images for matcha.            
+│   ├── 29000056.jpg
+│   └── red watercolour background 1412.jpg                     
+├── objects.js                                    # This file contains objects that are used with the routes js scripts.
 ├── package-lock.json
-├── package.json
-├── routes
+├── package.json                                  # This file contains all modules that matcha requires.g
+├── routes                                        # This directory contains all the js scripts that are associated with https verbs / url paths/patterns
 │   ├── admin.js
 │   ├── authenticate.js
 │   ├── block.js
@@ -81,8 +83,8 @@ Matcha is a website that enables users to share there location via geolocation i
 │   ├── verify_token.js
 │   ├── view_history.js
 │   └── visit_history.js
-├── update_username_obj.js
-└── views
+├── update_username_obj.js                         # This file contains objects that are used within the route scripts.
+└── views                                          # This file contains all the EJS files, so mainly EJS is a tool for generating web pages that can include dynamic data
     ├── admin.ejs
     ├── blocked_users.ejs
     ├── change_profile_pic.ejs
