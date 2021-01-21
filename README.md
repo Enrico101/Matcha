@@ -39,3 +39,84 @@ Matcha is a website that enables users to share there location via geolocation i
 
 10) The profile settings page is where you go to update any information thats related to your profile.
 
+# File structure
+```bash
+.
+├── README.md
+├── app.js
+├── author
+├── create_matcha.js
+├── database.js
+├── index_images                                                │   ├── 29000056.jpg
+│   └── red watercolour background 1412.jpg                     ├── objects.js
+├── package-lock.json
+├── package.json
+├── routes
+│   ├── admin.js
+│   ├── authenticate.js
+│   ├── block.js
+│   ├── block_requests.js
+│   ├── chat.js
+│   ├── chat_navigation.js
+│   ├── check_profile.js
+│   ├── complete_profile.js
+│   ├── forgot_password.js
+│   ├── home.js
+│   ├── index.js
+│   ├── like.js
+│   ├── like_history.js
+│   ├── login.js
+│   ├── logout.js
+│   ├── profile.js
+│   ├── profile_settings.js
+│   ├── report_user.js
+│   ├── reset_password.js
+│   ├── search.js
+│   ├── selected_pic.js
+│   ├── set_profile_pic.js
+│   ├── signup.js
+│   ├── unlike.js
+│   ├── user_profile.js
+│   ├── verfify.js
+│   ├── verify_token.js
+│   ├── view_history.js
+│   └── visit_history.js
+├── update_username_obj.js
+└── views
+    ├── admin.ejs
+    ├── blocked_users.ejs
+    ├── change_profile_pic.ejs
+    ├── chat.ejs
+    ├── chat_navigation.ejs
+    ├── forgot_password.ejs
+    ├── home.ejs
+    ├── index.ejs
+    ├── like_history.ejs
+    ├── login.ejs
+    ├── photo.ejs
+    ├── profile.ejs
+    ├── profile_settings_index.ejs
+    ├── reset_password.ejs
+    ├── search.ejs
+    ├── set_profile.ejs
+    ├── set_profile_pic.ejs
+    ├── signup.ejs
+    ├── update_age.ejs
+    ├── update_bio.ejs
+    ├── update_email.ejs
+    ├── update_firstname.ejs
+    ├── update_interests.ejs
+    ├── update_lastname.ejs
+    ├── update_location.ejs
+    ├── update_password.ejs
+    ├── update_prefence.ejs
+    ├── update_preferred_distance.ejs
+    ├── update_username.ejs
+    ├── upload_images.ejs
+    ├── user_profile.ejs
+    ├── view_history.ejs
+    └── visit_history.ejs
+
+3 directories, 73 files
+```
+
