@@ -17,7 +17,7 @@ Matcha is a website that enables users to share there location via geolocation i
 5. Either set your MySQL credentials to "user: root, password: Root444@" or modify the database file to your custom login credentials.
 6. Run the command "node create_matcha.js". This command will create the mysql databse and necessary folders required by mathca.
 
-#Application usage
+# Application usage
 
 1) First signup and verify your account
 
