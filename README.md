@@ -122,3 +122,8 @@ Matcha is a website that enables users to share there location via geolocation i
 3 directories, 73 files
 ```
 
+# Project diagram
+![alt text](https://github.com/Enrico101/Matcha/blob/master/index_images/UML%20diagram%20complete%20-%20Page%201%20(3).png?raw=true)
+
+# ER Diagram
+![alt text](https://github.com/Enrico101/Matcha/blob/master/index_images/Matcha_eerd.png?raw=true)
