@@ -127,3 +127,56 @@ Matcha is a website that enables users to share there location via geolocation i
 
 # ER Diagram
 ![alt text](https://github.com/Enrico101/Matcha/blob/master/index_images/Matcha_eerd.png?raw=true)
+
+# Testing
+Test Outline:
+
+1. Launch the webserver.
+
+2. Create and account.
+
+3. Login.
+
+4. Edit profile.
+
+5. View profile suggestions.
+
+6. Search / filter.
+
+7. Geolocation.
+
+8. Popularity Rating.
+
+9. View profile.
+
+10. Like. a users profile
+
+11. Block user.
+
+12. Messaging.
+
+Expected Outcomes:
+
+1. The server should start without any errors.
+
+2. You should be able to create an account.
+
+3. You should be able to login.
+
+4. You should be able to edit your profile.
+
+5. You should be able to view suggested profiles.
+
+6. You should be able to search and filter profiles.
+
+7. Geolocation should be utilized within matcha.
+
+8. People should have popularity ratings.
+
+9. You should be able to view a profile.
+
+10. You should be able to like a users profile.
+
+11. You should be able to block a user.
+
+12. You should be able to chat with a user you matched with.
